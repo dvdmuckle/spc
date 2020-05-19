@@ -4,3 +4,4 @@
 !*/
 !**/*.go
 !.gitignore
+!go.*

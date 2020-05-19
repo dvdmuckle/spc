@@ -78,7 +78,7 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name ".goify" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(home + "/./config/goify")
 		viper.SetConfigName(".goify")
 	}
 
