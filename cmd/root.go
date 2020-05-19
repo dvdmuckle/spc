@@ -17,8 +17,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
+	"github.com/golang/glog"
 	"os"
+
+	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -57,7 +59,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.goify.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/goify/config.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -76,13 +78,19 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		configPath := home + "/.config/goify"
+		if err := os.MkdirAll(configPath, 0755); err != nil {
+			glog.Fatal("Error creating config path: ", err)
+		}
 
-		// Search config in home directory with name ".goify" (without extension).
-		viper.AddConfigPath(home + "/./config/goify")
-		viper.SetConfigName(".goify")
+		viper.AddConfigPath(configPath)
+		viper.SetConfigName("config")
+		viper.SetConfigType("yaml")
 	}
-
 	viper.AutomaticEnv() // read in environment variables that match
+	if err := viper.SafeWriteConfig(); err != nil {
+		glog.Fatal("Error writing config file: ", err)
+	}
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
