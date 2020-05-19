@@ -11,5 +11,6 @@ The goal of this project is to present a simple, lightweight command line interf
 | Toggle playback | No | No |
 | Search | No | Yes |
 | Volume | No | Yes |
+| Status | No | Yes |
 ## Contributing
 For feature requests, feel free to create an issue or creating a PR changing the above roadmap.
