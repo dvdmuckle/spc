@@ -85,15 +85,16 @@ func initConfig() {
 
 		viper.AddConfigPath(configPath)
 		viper.SetConfigName("config")
-		viper.SetConfigType("yaml")
+		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
 	}
+	viper.SetConfigType("yaml")
 	viper.AutomaticEnv() // read in environment variables that match
-	if err := viper.SafeWriteConfig(); err != nil {
-		glog.Fatal("Error writing config file: ", err)
-	}
-
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+	if err := viper.WriteConfigAs(cfgFile); err != nil {
+		glog.Fatal("Error writing config file: ", err)
+	}
+
 }
