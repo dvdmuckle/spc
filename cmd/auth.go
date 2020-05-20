@@ -69,7 +69,7 @@ func auth() {
 		}
 		viper.Set("auth", token)
 		viper.WriteConfigAs(cfgFile)
-		fmt.Println("Login successful as ", user.ID)
+		fmt.Println("Login successful as", user.ID)
 	}
 }
 
