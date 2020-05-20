@@ -45,6 +45,7 @@ func auth() {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/goify/config.yaml")
 		os.Exit(1)
 	}
+	//TODO: Go back and reimplement this with the spotifyAuth library
 	provider := spotifyAuth.New(clientID, secret, redirectURI)
 	if viper.GetString("auth.accesstoken") != "" && provider.RefreshTokenAvailable() {
 		viper.Set("auth.accesstoken", helper.RefreshToken(provider, viper.GetString("auth.refreshtoken")))
