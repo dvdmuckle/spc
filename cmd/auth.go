@@ -46,8 +46,8 @@ func auth() {
 		os.Exit(1)
 	}
 	provider := spotifyAuth.New(clientID, secret, redirectURI)
-	if viper.GetString("auth.token") != "" && provider.RefreshTokenAvailable() {
-		viper.Set("auth.token", helper.RefreshToken(provider, viper.GetString("auth.token")))
+	if viper.GetString("auth.accesstoken") != "" && provider.RefreshTokenAvailable() {
+		viper.Set("auth.accesstoken", helper.RefreshToken(provider, viper.GetString("auth.refreshtoken")))
 	} else {
 		fmt.Println("Getting token...")
 		authenticator.SetAuthInfo(clientID, secret)
@@ -62,6 +62,12 @@ func auth() {
 		if err != nil {
 			glog.Fatal(err)
 		}
+		token, err := client.Token()
+		if err != nil {
+			glog.Fatal(err)
+		}
+		viper.Set("auth", token)
+		viper.WriteConfig()
 		fmt.Println("Login successful as ", user.ID)
 	}
 }

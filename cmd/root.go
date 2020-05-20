@@ -90,7 +90,6 @@ func initConfig() {
 	}
 	viper.SetDefault("spotifyclientid", "")
 	viper.SetDefault("spotifysecret", "")
-	viper.SetDefault("auth.token", "")
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
