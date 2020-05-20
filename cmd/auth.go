@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2020 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,9 +17,70 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
+	"os"
 
+	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/golang/glog"
+	spotifyAuth "github.com/markbates/goth/providers/spotify"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/zmb3/spotify"
 )
+
+const redirectURI = "http://localhost:8888/callback"
+
+var (
+	authenticator = spotify.NewAuthenticator(redirectURI)
+	ch            = make(chan *spotify.Client)
+	clientID      string
+	secret        string
+	state         = "ringdingthing"
+)
+
+func auth() {
+	clientID = viper.GetString("spotifyclientid")
+	secret = viper.GetString("spotifysecret")
+	if clientID == "" || secret == "" {
+		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/goify/config.yaml")
+		os.Exit(1)
+	}
+	provider := spotifyAuth.New(clientID, secret, redirectURI)
+	if viper.GetString("auth.token") != "" && provider.RefreshTokenAvailable() {
+		viper.Set("auth.token", helper.RefreshToken(provider, viper.GetString("auth.token")))
+	} else {
+		fmt.Println("Getting token...")
+		authenticator.SetAuthInfo(clientID, secret)
+		http.HandleFunc("/callback", completeAuth)
+		go http.ListenAndServe(":8888", nil)
+		url := authenticator.AuthURL(state)
+		fmt.Println("Please log in to Spotify by clicking the following link:", url)
+		//wait for auth to finish
+		client := <-ch
+
+		user, err := client.CurrentUser()
+		if err != nil {
+			glog.Fatal(err)
+		}
+		fmt.Println("Login successful as ", user.ID)
+	}
+}
+
+func completeAuth(w http.ResponseWriter, r *http.Request) {
+	tok, err := authenticator.Token(state, r)
+	if err != nil {
+		http.Error(w, "Couldn't get token", http.StatusForbidden)
+		glog.Fatal(err)
+	}
+	if st := r.FormValue("state"); st != state {
+		http.NotFound(w, r)
+		glog.Fatalf("State mismatch: %s != %s\n", st, state)
+	}
+	// use the token to get an authenticated client
+	client := authenticator.NewClient(tok)
+	fmt.Fprintf(w, "Login Completed!")
+	ch <- &client
+}
 
 // authCmd represents the auth command
 var authCmd = &cobra.Command{
@@ -32,7 +93,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("auth called")
+		auth()
 	},
 }
 

@@ -17,8 +17,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/golang/glog"
 	"os"
+
+	"github.com/golang/glog"
 
 	"github.com/spf13/cobra"
 
@@ -87,6 +88,9 @@ func initConfig() {
 		viper.SetConfigName("config")
 		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
 	}
+	viper.SetDefault("spotifyclientid", "")
+	viper.SetDefault("spotifysecret", "")
+	viper.SetDefault("auth.token", "")
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
