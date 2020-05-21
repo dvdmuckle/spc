@@ -28,10 +28,11 @@ var authCmd = &cobra.Command{
 	Long: `Authenticates with Spotify by printout out a login link, which will then save your access token to the config file
 	       Use this command after the initial login to refresh your access token`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.Auth(viper.GetViper(), cfgFile)
+		helper.Auth(cmd, viper.GetViper(), cfgFile)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(authCmd)
+	authCmd.Flags().BoolP("refresh", "r", false, "Force refreshing the token")
 }

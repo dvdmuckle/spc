@@ -7,6 +7,7 @@ import (
 
 	"github.com/golang/glog"
 	spotifyAuth "github.com/markbates/goth/providers/spotify"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zmb3/spotify"
 )
@@ -38,16 +39,20 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 //Auth authenticates with Spotify and refreshes the token
-func Auth(viper *viper.Viper, cfgFile string) {
+func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string) {
 	clientID = viper.GetString("spotifyclientid")
 	secret = viper.GetString("spotifysecret")
 	if clientID == "" || secret == "" {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/goify/config.yaml")
 		os.Exit(1)
 	}
-	//TODO: Go back and reimplement this with the spotifyAuth library
+
 	provider := spotifyAuth.New(clientID, secret, redirectURI)
-	if viper.GetString("auth.accesstoken") != "" && provider.RefreshTokenAvailable() {
+	shouldRefresh, err := cmd.Flags().GetBool("refresh")
+	if err != nil {
+		glog.Fatal(err)
+	}
+	if viper.GetString("auth.accesstoken") != "" && shouldRefresh {
 		fmt.Println("Refreshing token...")
 		viper.Set("auth.accesstoken", RefreshToken(provider, viper.GetString("auth.refreshtoken")))
 	} else {
