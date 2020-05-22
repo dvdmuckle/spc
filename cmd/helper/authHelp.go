@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zmb3/spotify"
+	"golang.org/x/oauth2"
 )
 
 const redirectURI = "http://localhost:8888/callback"
@@ -52,9 +53,9 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string) {
 	if err != nil {
 		glog.Fatal(err)
 	}
-	if viper.GetString("auth.accesstoken") != "" && shouldRefresh {
+	if viper.GetStringMap("auth") != nil && len(viper.GetStringMap("auth")) != 0 && shouldRefresh {
 		fmt.Println("Refreshing token...")
-		viper.Set("auth.accesstoken", RefreshToken(provider, viper.GetString("auth.refreshtoken")))
+		viper.Set("auth", RefreshToken(provider, viper.GetString("auth.refreshtoken")))
 	} else {
 		fmt.Println("Getting token...")
 		authenticator.SetAuthInfo(clientID, secret)
@@ -80,14 +81,15 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string) {
 }
 
 //RefreshToken refreshes the auth token from Spotify
-func RefreshToken(provider *spotifyAuth.Provider, tokenToRefresh string) string {
+//TODO: Replace implementation with vanilla oauth2 use
+func RefreshToken(provider *spotifyAuth.Provider, tokenToRefresh string) *oauth2.Token {
 	if tokenToRefresh != "" && provider.RefreshTokenAvailable() {
 		token, err := provider.RefreshToken(tokenToRefresh)
 		if err != nil {
 			glog.Fatal(err)
 		}
-		return token.AccessToken
+		return token
 	}
 	glog.Fatal("Cannot refresh token, token is empty")
-	return ""
+	return nil
 }
