@@ -16,9 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"encoding/base64"
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/dvdmuckle/goify/cmd/helper"
 	"github.com/golang/glog"
 
 	"github.com/spf13/cobra"
@@ -26,6 +29,10 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
+
+//Config type stores constantly retrieved things from the config file
+
+var conf helper.Config
 
 var cfgFile string
 
@@ -90,5 +97,17 @@ func initConfig() {
 	if err := viper.WriteConfigAs(cfgFile); err != nil {
 		glog.Fatal("Error writing config file: ", err)
 	}
-
+	conf.ClientID = viper.GetString("spotifyclientid")
+	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
+		//Do nothing
+		fmt.Println("Hit error on decoding secert")
+	} else {
+		conf.Secret = strings.TrimSpace(string(secret))
+	}
+	//TODO: #2 I would love to do something like viper.GetStringMapString("auth") here but
+	//I can't figure out how to cast those results to type oauth2.Token
+	conf.Token.AccessToken = viper.GetString("auth.accesstoken")
+	conf.Token.RefreshToken = viper.GetString("auth.refreshtoken")
+	conf.Token.TokenType = viper.GetString("auth.tokentype")
+	conf.Token.Expiry = viper.GetTime("auth.expiry")
 }

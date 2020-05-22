@@ -40,9 +40,9 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 //Auth authenticates with Spotify and refreshes the token
-func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string) {
-	clientID = viper.GetString("spotifyclientid")
-	secret = viper.GetString("spotifysecret")
+func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) {
+	clientID = conf.ClientID
+	secret = conf.Secret
 	if clientID == "" || secret == "" {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/goify/config.yaml")
 		os.Exit(1)
@@ -53,8 +53,10 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string) {
 	if err != nil {
 		glog.Fatal(err)
 	}
-	if viper.GetStringMap("auth") != nil && len(viper.GetStringMap("auth")) != 0 && shouldRefresh {
+	if viper.GetStringMapString("auth") != nil && len(viper.GetStringMapString("auth")) != 0 && shouldRefresh {
 		fmt.Println("Refreshing token...")
+		newToken := RefreshToken(provider, viper.GetString("auth.refreshtoken"))
+		conf.Token = *newToken
 		viper.Set("auth", RefreshToken(provider, viper.GetString("auth.refreshtoken")))
 	} else {
 		fmt.Println("Getting token...")
@@ -74,7 +76,8 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string) {
 		if err != nil {
 			glog.Fatal(err)
 		}
-		viper.Set("auth", token)
+		conf.Token = *token
+		viper.Set("auth", conf.Token)
 		viper.WriteConfigAs(cfgFile)
 		fmt.Println("Login successful as", user.ID)
 	}
