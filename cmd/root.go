@@ -94,12 +94,13 @@ func initConfig() {
 	conf.ClientID = viper.GetString("spotifyclientid")
 	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
 		//Do nothing
-		fmt.Println("Hit error on decoding secert")
+		//TODO Figure out something better to do here
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}
 	//TODO: #2 I would love to do something like viper.GetStringMapString("auth") here but
 	//I can't figure out how to cast those results to type oauth2.Token
+	//Maybe viper.Marshal and viper.Unmarshal?
 	conf.Token.AccessToken = viper.GetString("auth.accesstoken")
 	conf.Token.RefreshToken = viper.GetString("auth.refreshtoken")
 	conf.Token.TokenType = viper.GetString("auth.tokentype")
