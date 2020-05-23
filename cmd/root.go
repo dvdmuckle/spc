@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2020 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,9 +16,14 @@ limitations under the License.
 package cmd
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
-	"github.com/golang/glog"
 	"os"
+	"strings"
+
+	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/golang/glog"
 
 	"github.com/spf13/cobra"
 
@@ -26,21 +31,19 @@ import (
 	"github.com/spf13/viper"
 )
 
+//Config type stores constantly retrieved things from the config file
+
+var conf helper.Config
+
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "goify",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "Command line tool to control Spotify",
+	Long: `Goify is a simple command line tool to control Spotify using the Spotify API
+to allow for cross platform use. It is designed to be simple and is limited in
+scope, and is best when paired with another more complicated tool.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -54,16 +57,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/goify/config.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/goify/config.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -87,6 +81,8 @@ func initConfig() {
 		viper.SetConfigName("config")
 		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
 	}
+	viper.SetDefault("spotifyclientid", "Your Spotify ClientID")
+	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
@@ -96,5 +92,14 @@ func initConfig() {
 	if err := viper.WriteConfigAs(cfgFile); err != nil {
 		glog.Fatal("Error writing config file: ", err)
 	}
-
+	conf.ClientID = viper.GetString("spotifyclientid")
+	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
+		//Do nothing
+		//TODO Figure out something better to do here
+	} else {
+		conf.Secret = strings.TrimSpace(string(secret))
+	}
+	if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
+		glog.Fatal(err)
+	}
 }

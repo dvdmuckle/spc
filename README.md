@@ -5,7 +5,7 @@ The goal of this project is to present a simple, lightweight command line interf
 ## Roadmap
 | Feature | Implemented yet? | Essential? |
 |---------|------------------|------------| 
-| Auth | No | Yes |
+| Auth | Yes | Yes |
 | Play | No | Yes |
 | Pause | No | Yes |
 | Toggle playback | No | No |
