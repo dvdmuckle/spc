@@ -5,4 +5,4 @@
 !**/*.go
 !.gitignore
 !go.*
-!vendor/**
+vendor/*
