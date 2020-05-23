@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -80,8 +81,8 @@ func initConfig() {
 		viper.SetConfigName("config")
 		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
 	}
-	viper.SetDefault("spotifyclientid", "")
-	viper.SetDefault("spotifysecret", "")
+	viper.SetDefault("spotifyclientid", "Your Spotify ClientID")
+	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
@@ -98,11 +99,7 @@ func initConfig() {
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}
-	//TODO: #2 I would love to do something like viper.GetStringMapString("auth") here but
-	//I can't figure out how to cast those results to type oauth2.Token
-	//Maybe viper.Marshal and viper.Unmarshal?
-	conf.Token.AccessToken = viper.GetString("auth.accesstoken")
-	conf.Token.RefreshToken = viper.GetString("auth.refreshtoken")
-	conf.Token.TokenType = viper.GetString("auth.tokentype")
-	conf.Token.Expiry = viper.GetTime("auth.expiry")
+	if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
+		glog.Fatal(err)
+	}
 }

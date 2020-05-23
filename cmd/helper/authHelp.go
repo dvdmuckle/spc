@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -53,11 +54,16 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 	if err != nil {
 		glog.Fatal(err)
 	}
-	if viper.GetStringMapString("auth") != nil && len(viper.GetStringMapString("auth")) != 0 && shouldRefresh {
+	if len(viper.GetString("auth")) != 0 && shouldRefresh {
 		fmt.Println("Refreshing token...")
-		newToken := RefreshToken(provider, viper.GetString("auth.refreshtoken"))
+		newToken := RefreshToken(clientID, secret, conf.Token.RefreshToken)
 		conf.Token = *newToken
-		viper.Set("auth", RefreshToken(provider, viper.GetString("auth.refreshtoken")))
+		marshalToken, err := json.Marshal(conf.Token)
+		if err != nil {
+			glog.Fatal(err)
+		}
+		viper.Set("auth", string(marshalToken))
+		viper.WriteConfigAs(cfgFile)
 	} else {
 		fmt.Println("Getting token...")
 		authenticator.SetAuthInfo(clientID, secret)
@@ -77,7 +83,11 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 			glog.Fatal(err)
 		}
 		conf.Token = *token
-		viper.Set("auth", conf.Token)
+		marshalToken, err := json.Marshal(conf.Token)
+		if err != nil {
+			glog.Fatal(err)
+		}
+		viper.Set("auth", string(marshalToken))
 		viper.WriteConfigAs(cfgFile)
 		fmt.Println("Login successful as", user.ID)
 	}
@@ -85,7 +95,8 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 
 //RefreshToken refreshes the auth token from Spotify
 //TODO: Replace implementation with vanilla oauth2 use
-func RefreshToken(provider *spotifyAuth.Provider, tokenToRefresh string) *oauth2.Token {
+func RefreshToken(client string, secret string, tokenToRefresh string) *oauth2.Token {
+	provider := spotifyAuth.New(client, secret, redirectURI)
 	if tokenToRefresh != "" && provider.RefreshTokenAvailable() {
 		token, err := provider.RefreshToken(tokenToRefresh)
 		if err != nil {
