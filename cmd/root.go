@@ -102,4 +102,5 @@ func initConfig() {
 	if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
 		glog.Fatal(err)
 	}
+	helper.SetClient(&conf)
 }
