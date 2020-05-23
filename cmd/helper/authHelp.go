@@ -106,3 +106,12 @@ func RefreshToken(client string, secret string, tokenToRefresh string) *oauth2.T
 	glog.Fatal("Cannot refresh token, token is empty")
 	return nil
 }
+
+//SetClient sets the Client field of Config struct to a valid Spotify client
+//The Token field in the COnfig struct must be set
+func SetClient(conf *Config) {
+	if conf.Token == (oauth2.Token{}) {
+		glog.Fatal("SetClient called before setting Token field in Config struct")
+	}
+	conf.Client = *spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
+}
