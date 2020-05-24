@@ -24,6 +24,8 @@ import (
 
 	"github.com/dvdmuckle/goify/cmd/helper"
 	"github.com/golang/glog"
+	"github.com/zmb3/spotify"
+	"golang.org/x/oauth2"
 
 	"github.com/spf13/cobra"
 
@@ -90,7 +92,7 @@ func initConfig() {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 	if err := viper.WriteConfigAs(cfgFile); err != nil {
-		glog.Fatal("Error writing config file: ", err)
+		glog.Fatal("Error writing config file:", err)
 	}
 	conf.ClientID = viper.GetString("spotifyclientid")
 	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
@@ -99,8 +101,13 @@ func initConfig() {
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}
-	if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
-		glog.Fatal(err)
+	if viper.GetString("auth") != "" {
+		if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
+			glog.Fatal(err)
+		}
 	}
-	helper.SetClient(&conf)
+	conf.DeviceID = spotify.ID(viper.GetString("device"))
+	if conf.Token != (oauth2.Token{}) {
+		helper.SetClient(&conf)
+	}
 }

@@ -11,5 +11,5 @@ type Config struct {
 	Secret   string
 	Token    oauth2.Token
 	Client   spotify.Client
-	DeviceID string
+	DeviceID spotify.ID
 }
