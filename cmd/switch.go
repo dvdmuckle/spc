@@ -16,8 +16,15 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/dvdmuckle/goify/helper"
+	"fmt"
+	"os"
+
+	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/golang/glog"
+	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/zmb3/spotify"
 )
 
 var switchCmd = &cobra.Command{
@@ -29,12 +36,35 @@ var switchCmd = &cobra.Command{
 	This will also switch playback to the device selected if playback is active,
 	and can also switch playback to the already configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if conf.Client == (spotify.Client{}) {
+			fmt.Println("Please run goify auth first to login")
+			os.Exit(1)
+		}
+		conf.Token = *helper.RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
+		shouldClear, _ := cmd.Flags().GetBool("clear")
+		shouldSwitch, _ := cmd.Flags().GetBool("noswitch")
+		shouldPrint, _ := cmd.Flags().GetBool("print")
+		shouldPlay, _ := cmd.Flags().GetBool("play")
+		deviceToSet, _ := cmd.Flags().GetString("set")
+		switch {
+		case deviceToSet != "":
+			setDevice(&conf, spotify.ID(deviceToSet))
+			transferPlayback(&conf, shouldPlay)
+		case shouldPrint:
+			getDevices(&conf)
+		case shouldClear:
+			clearDeviceEntry(&conf)
+		case !shouldSwitch:
+			fuzzySwitchDevice(&conf, shouldPlay)
+		default:
+			transferPlayback(&conf, shouldPlay)
+		}
+		if err := viper.WriteConfigAs(cfgFile); err != nil {
+			glog.Fatal("Error writing config:", err)
+		}
+		fmt.Println("Switched to", conf.DeviceID.String())
 
 	},
-}
-
-func transferPlayback(config *helper.Config) {
-	client = &config.Client
 }
 
 func init() {
@@ -44,4 +74,68 @@ func init() {
 	switchCmd.Flags().BoolP("clear", "c", false, "Clear the current device entry")
 	switchCmd.Flags().BoolP("noswitch", "n", false, "Transfer playback to the currently configured device")
 	switchCmd.Flags().BoolP("print", "p", false, "Only print the currently configured device")
+	switchCmd.Flags().Bool("play", true, "Start playback on switch")
+}
+
+func transferPlayback(conf *helper.Config, shouldPlay bool) {
+	if err := conf.Client.TransferPlayback(conf.DeviceID, shouldPlay); err != nil {
+		glog.Fatal(err)
+	}
+}
+
+func clearDeviceEntry(conf *helper.Config) {
+	conf.DeviceID = ""
+	viper.Set("device", "")
+}
+
+func getDeviceList(conf *helper.Config) []spotify.PlayerDevice {
+	devices, err := conf.Client.PlayerDevices()
+	if err != nil {
+		glog.Fatal(err)
+	}
+	if len(devices) == 0 {
+		fmt.Println("No devices found")
+		os.Exit(0)
+	}
+	return devices
+}
+
+func getDevices(conf *helper.Config) {
+	devices := getDeviceList(conf)
+	for _, device := range devices {
+		if device.ID == conf.DeviceID {
+			fmt.Printf("Device configured: %s, %s\n", device.Name, device.ID.String())
+			return
+		}
+		fmt.Println("Device configured not available, or no device is configured")
+	}
+}
+
+func setDevice(conf *helper.Config, id spotify.ID) {
+	conf.DeviceID = id
+	viper.Set("device", conf.DeviceID.String())
+}
+
+func fuzzySwitchDevice(conf *helper.Config, shouldPlay bool) {
+	devices := getDeviceList(conf)
+	idx, err := fuzzyfinder.Find(
+		devices,
+		func(i int) string {
+			switch {
+			case devices[i].Active && devices[i].ID.String() == conf.DeviceID.String():
+				return fmt.Sprintf("%s (currently active and configured)", devices[i].Name)
+			case devices[i].Active:
+				return fmt.Sprintf("%s (currently active)", devices[i].Name)
+			case devices[i].ID.String() == conf.DeviceID.String():
+				return fmt.Sprintf("%s (currently configured)", devices[i].Name)
+			default:
+				return fmt.Sprintf("%s", devices[i].Name)
+			}
+		})
+	if err != nil {
+		glog.Fatal(err)
+	}
+	setDevice(conf, devices[idx].ID)
+	transferPlayback(conf, shouldPlay)
+	return
 }

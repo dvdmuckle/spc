@@ -62,7 +62,9 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 			glog.Fatal(err)
 		}
 		viper.Set("auth", string(marshalToken))
-		viper.WriteConfigAs(cfgFile)
+		if err := viper.WriteConfigAs(cfgFile); err != nil {
+			glog.Fatal("Error writing config:", err)
+		}
 	} else {
 		fmt.Println("Getting token...")
 		authenticator.SetAuthInfo(clientID, secret)
@@ -87,7 +89,9 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 			glog.Fatal(err)
 		}
 		viper.Set("auth", string(marshalToken))
-		viper.WriteConfigAs(cfgFile)
+		if err := viper.WriteConfigAs(cfgFile); err != nil {
+			glog.Fatal("Error writing config:", err)
+		}
 		fmt.Println("Login successful as", user.ID)
 	}
 }
@@ -113,5 +117,5 @@ func SetClient(conf *Config) {
 	if conf.Token == (oauth2.Token{}) {
 		glog.Fatal("SetClient called before setting Token field in Config struct")
 	}
-	conf.Client = *spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
+	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
 }
