@@ -44,8 +44,10 @@ var switchCmd = &cobra.Command{
 		shouldClear, _ := cmd.Flags().GetBool("clear")
 		shouldSwitch, _ := cmd.Flags().GetBool("noswitch")
 		shouldPrint, _ := cmd.Flags().GetBool("print")
+		//TODO: Only play if playback is currently running
 		shouldPlay, _ := cmd.Flags().GetBool("play")
 		deviceToSet, _ := cmd.Flags().GetString("set")
+		justSwitch, _ := cmd.Flags().GetBool("config")
 		switch {
 		case deviceToSet != "":
 			setDevice(&conf, spotify.ID(deviceToSet))
@@ -55,7 +57,15 @@ var switchCmd = &cobra.Command{
 		case shouldClear:
 			clearDeviceEntry(&conf)
 		case !shouldSwitch:
-			fuzzySwitchDevice(&conf, shouldPlay)
+			device := fuzzySwitchDevice(&conf)
+			switch {
+			case justSwitch:
+				setDevice(&conf, device)
+			default:
+				setDevice(&conf, device)
+				transferPlayback(&conf, shouldPlay)
+			}
+			//Default case for if noswitch/shouldSwitch == true
 		default:
 			transferPlayback(&conf, shouldPlay)
 		}
@@ -70,11 +80,12 @@ var switchCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(switchCmd)
 
+	switchCmd.Flags().Bool("config", false, "Switch configured device but do not transfer playback")
 	switchCmd.Flags().StringP("set", "d", "", "DeviceID to switch to")
 	switchCmd.Flags().BoolP("clear", "c", false, "Clear the current device entry")
 	switchCmd.Flags().BoolP("noswitch", "n", false, "Transfer playback to the currently configured device")
 	switchCmd.Flags().BoolP("print", "p", false, "Only print the currently configured device")
-	switchCmd.Flags().Bool("play", true, "Start playback on switch")
+	switchCmd.Flags().Bool("play", false, "Start playback on switch")
 }
 
 func transferPlayback(conf *helper.Config, shouldPlay bool) {
@@ -116,26 +127,30 @@ func setDevice(conf *helper.Config, id spotify.ID) {
 	viper.Set("device", conf.DeviceID.String())
 }
 
-func fuzzySwitchDevice(conf *helper.Config, shouldPlay bool) {
+func fuzzySwitchDevice(conf *helper.Config) spotify.ID {
 	devices := getDeviceList(conf)
+	if len(devices) == 0 {
+		fmt.Println("No devices detected, is Spotify open?")
+	} else if len(devices) == 1 {
+		fmt.Println("Only one device found, switching to", devices[0].Name)
+		return devices[0].ID
+	}
 	idx, err := fuzzyfinder.Find(
 		devices,
 		func(i int) string {
 			switch {
 			case devices[i].Active && devices[i].ID.String() == conf.DeviceID.String():
-				return fmt.Sprintf("%s (currently active and configured)", devices[i].Name)
+				return fmt.Sprintf("%s - %s (currently active and configured)", devices[i].Name, devices[i].ID.String())
 			case devices[i].Active:
-				return fmt.Sprintf("%s (currently active)", devices[i].Name)
+				return fmt.Sprintf("%s - %s (currently active)", devices[i].Name, devices[i].ID.String())
 			case devices[i].ID.String() == conf.DeviceID.String():
-				return fmt.Sprintf("%s (currently configured)", devices[i].Name)
+				return fmt.Sprintf("%s - %s (currently configured)", devices[i].Name, devices[i].ID.String())
 			default:
-				return fmt.Sprintf("%s", devices[i].Name)
+				return fmt.Sprintf("%s - %s", devices[i].Name, devices[i].ID.String())
 			}
 		})
 	if err != nil {
 		glog.Fatal(err)
 	}
-	setDevice(conf, devices[idx].ID)
-	transferPlayback(conf, shouldPlay)
-	return
+	return devices[idx].ID
 }
