@@ -42,7 +42,7 @@ var switchCmd = &cobra.Command{
 		}
 		conf.Token = *helper.RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
 		shouldClear, _ := cmd.Flags().GetBool("clear")
-		shouldSwitch, _ := cmd.Flags().GetBool("noswitch")
+		shouldSwitch, _ := cmd.Flags().GetBool("transfer-only")
 		shouldPrint, _ := cmd.Flags().GetBool("print")
 		//TODO: Only play if playback is currently running
 		shouldPlay, _ := cmd.Flags().GetBool("play")
@@ -83,7 +83,7 @@ func init() {
 	switchCmd.Flags().Bool("config", false, "Switch configured device but do not transfer playback")
 	switchCmd.Flags().StringP("set", "d", "", "DeviceID to switch to")
 	switchCmd.Flags().BoolP("clear", "c", false, "Clear the current device entry")
-	switchCmd.Flags().BoolP("noswitch", "n", false, "Transfer playback to the currently configured device")
+	switchCmd.Flags().BoolP("transfer-only", "t", false, "Transfer playback to the currently configured device")
 	switchCmd.Flags().BoolP("print", "p", false, "Only print the currently configured device")
 	switchCmd.Flags().Bool("play", false, "Start playback on switch")
 }
