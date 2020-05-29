@@ -49,13 +49,13 @@ var switchCmd = &cobra.Command{
 		deviceToSet, _ := cmd.Flags().GetString("set")
 		justSwitch, _ := cmd.Flags().GetBool("config")
 		switch {
-		case deviceToSet != "":
-			setDevice(&conf, spotify.ID(deviceToSet))
-			transferPlayback(&conf, shouldPlay)
 		case shouldPrint:
 			getDevices(&conf)
 		case shouldClear:
 			clearDeviceEntry(&conf)
+		case deviceToSet != "":
+			setDevice(&conf, spotify.ID(deviceToSet))
+			transferPlayback(&conf, shouldPlay)
 		case !shouldSwitch:
 			device := fuzzySwitchDevice(&conf)
 			switch {
