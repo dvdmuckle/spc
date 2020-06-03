@@ -8,6 +8,7 @@ The goal of this project is to present a simple, lightweight command line interf
 | Feature | Implemented yet? | Essential? |
 |---------|------------------|------------| 
 | Auth | Yes | Yes |
+| Switch Device | Yes | No |
 | Play | No | Yes |
 | Pause | No | Yes |
 | Toggle playback | No | No |
