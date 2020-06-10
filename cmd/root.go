@@ -96,8 +96,7 @@ func initConfig() {
 	}
 	conf.ClientID = viper.GetString("spotifyclientid")
 	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
-		//Do nothing
-		//TODO Figure out something better to do here
+		glog.Fatal("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}
