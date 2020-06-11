@@ -98,10 +98,10 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 
 //RefreshToken refreshes the auth token from Spotify
 //TODO: #4 Replace implementation with vanilla oauth2 use
-func RefreshToken(client string, secret string, tokenToRefresh string) *oauth2.Token {
+func RefreshToken(client string, secret string, refreshToken string) *oauth2.Token {
 	provider := spotifyAuth.New(client, secret, redirectURI)
-	if tokenToRefresh != "" && provider.RefreshTokenAvailable() {
-		token, err := provider.RefreshToken(tokenToRefresh)
+	if refreshToken != "" && provider.RefreshTokenAvailable() {
+		token, err := provider.RefreshToken(refreshToken)
 		if err != nil {
 			glog.Fatal(err)
 		}
@@ -117,5 +117,6 @@ func SetClient(conf *Config) {
 	if conf.Token == (oauth2.Token{}) {
 		glog.Fatal("SetClient called before setting Token field in Config struct")
 	}
+	conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
 }

@@ -40,15 +40,23 @@ var statusCmd = &cobra.Command{
 	
 	If a song has multiple artists, you can specify the upper limit of artists
 	to display with %X[1]a, where X is the number of artists to print, separated
-	by commas.`,
+	by commas.
+	
+	If there is no currently playing song on Spotify, regardless of format argument
+	the command will return an empty string. This may happen if Spotify is paused
+	for an extended period of time`,
+	//TODO: Allow user to pass %a, etc, as opposed to %[1]a
 	Run: func(cmd *cobra.Command, args []string) {
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
 			glog.Fatal(err)
 		}
+
 		statusFmt, _ := cmd.Flags().GetString("format")
-		if err != nil {
-			glog.Fatal(err)
+
+		if status.Item == nil {
+			fmt.Print("")
+			return
 		}
 		if statusFmt != "" {
 			toFmt := Status(*status)
