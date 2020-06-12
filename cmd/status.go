@@ -17,6 +17,8 @@ package cmd
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
 
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
@@ -33,10 +35,10 @@ var statusCmd = &cobra.Command{
 	A format string can be passed with --format or -f to specify what
 	the status printout should look like. The following fields are available:
 
-	%[1]a - artist
-	%[1]t - track
-	%[1]b - album
-	%[1]p - playing
+	%a - artist
+	%t - track
+	%b - album
+	%f - playing
 	
 	If a song has multiple artists, you can specify the upper limit of artists
 	to display with %X[1]a, where X is the number of artists to print, separated
@@ -45,7 +47,6 @@ var statusCmd = &cobra.Command{
 	If there is no currently playing song on Spotify, regardless of format argument
 	the command will return an empty string. This may happen if Spotify is paused
 	for an extended period of time`,
-	//TODO: Allow user to pass %a, etc, as opposed to %[1]a
 	Run: func(cmd *cobra.Command, args []string) {
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
@@ -59,6 +60,9 @@ var statusCmd = &cobra.Command{
 			return
 		}
 		if statusFmt != "" {
+			reg := regexp.MustCompile(`%([\d])?([atbf])`)
+			statusFmt = reg.ReplaceAllString(statusFmt, `%$1[1]$2`)
+			fmt.Println(statusFmt)
 			toFmt := Status(*status)
 			fmt.Printf(statusFmt+"\n", toFmt)
 		} else {
@@ -75,12 +79,12 @@ func init() {
 //Format implements Formatter for Spotify status
 func (stat Status) Format(state fmt.State, verb rune) {
 	switch verb {
+	case 'f':
+		fmt.Fprint(state, strconv.FormatBool(stat.Playing))
 	case 'b':
 		fmt.Fprint(state, stat.Item.Album.Name)
 	case 't':
 		fmt.Fprint(state, stat.Item.SimpleTrack.Name)
-	case 'p':
-		fmt.Fprint(state, stat.Playing)
 	case 'a':
 		wid, set := state.Width()
 		if set {
