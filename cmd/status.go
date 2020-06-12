@@ -62,7 +62,6 @@ var statusCmd = &cobra.Command{
 		if statusFmt != "" {
 			reg := regexp.MustCompile(`%([\d])?([atbf])`)
 			statusFmt = reg.ReplaceAllString(statusFmt, `%$1[1]$2`)
-			fmt.Println(statusFmt)
 			toFmt := Status(*status)
 			fmt.Printf(statusFmt+"\n", toFmt)
 		} else {
