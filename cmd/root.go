@@ -51,6 +51,7 @@ scope, and is best when paired with another more complicated tool.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	createConfig()
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -62,35 +63,45 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/goify/config.yaml)")
 }
 
+// createConfig creates the config file at ~/.config/goify/config.yaml if it does not exist
+func createConfig() {
+	// Find home directory.
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	configPath := home + "/.config/goify"
+	if err := os.MkdirAll(configPath, 0755); err != nil {
+		glog.Fatal("Error creating config path: ", err)
+	}
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(configPath)
+	viper.SetConfigName("config")
+	cfgFile = fmt.Sprintf(configPath + "/config.yaml")
+	viper.SetDefault("spotifyclientid", "Your Spotify ClientID")
+	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
+	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
+		if err := viper.WriteConfigAs(cfgFile); err != nil {
+			glog.Fatal("Error writing config file:", err)
+		}
+		fmt.Printf("Config file created at ~/.config/goify/config.yaml\n\n")
+	}
+}
+
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		configPath := home + "/.config/goify"
-		if err := os.MkdirAll(configPath, 0755); err != nil {
-			glog.Fatal("Error creating config path: ", err)
-		}
-
-		viper.AddConfigPath(configPath)
-		viper.SetConfigName("config")
-		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
+		createConfig()
 	}
-	viper.SetDefault("spotifyclientid", "Your Spotify ClientID")
-	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
-	viper.SetConfigType("yaml")
-	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
 		glog.Fatal("Error reading config file:", err)
 	}
+	viper.AutomaticEnv() // read in environment variables that match
 	if err := viper.WriteConfigAs(cfgFile); err != nil {
 		glog.Fatal("Error writing config file:", err)
 	}
