@@ -39,9 +39,10 @@ var statusCmd = &cobra.Command{
 	%t - track
 	%b - album
 	%f - playing
-	
+	%e ️- ▶ or ⏸️
+
 	If a song has multiple artists, you can specify the upper limit of artists
-	to display with %X[1]a, where X is the number of artists to print, separated
+	to display with %Xa, where X is the number of artists to print, separated
 	by commas.
 	
 	If there is no currently playing song on Spotify, regardless of format argument
@@ -80,6 +81,12 @@ func (stat Status) Format(state fmt.State, verb rune) {
 	switch verb {
 	case 'f':
 		fmt.Fprint(state, strconv.FormatBool(stat.Playing))
+	case 'e':
+		if stat.Playing {
+			fmt.Fprint(state, "▶️")
+		} else {
+			fmt.Fprint(state, "⏸️")
+		}
 	case 'b':
 		fmt.Fprint(state, stat.Item.Album.Name)
 	case 't':
