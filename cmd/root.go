@@ -59,8 +59,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/goify/config.yaml)")
 	cobra.OnInitialize(initConfig)
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/goify/config.yaml)")
 }
 
 // createConfig creates the config file at ~/.config/goify/config.yaml if it does not exist
