@@ -16,21 +16,25 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/dvdmuckle/goify/cmd/helper"
 	"github.com/spf13/cobra"
+	"github.com/zmb3/spotify"
 )
 
 // playCmd represents the play command
 var playCmd = &cobra.Command{
 	Use:   "play",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Start Spotify playback",
+	Long: `Will start Spotify playback on the device most
+	recently playing music.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if conf.Client == (spotify.Client{}) {
+			fmt.Println("Please run goify auth first to login")
+			os.Exit(1)
+		}
 		helper.Play(&conf)
 	},
 }
