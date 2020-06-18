@@ -17,8 +17,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
@@ -35,11 +37,12 @@ var statusCmd = &cobra.Command{
 	A format string can be passed with --format or -f to specify what
 	the status printout should look like. The following fields are available:
 
-	%a - artist
-	%t - track
-	%b - album
-	%f - playing
+	%a - Artist
+	%t - Track
+	%b - Album
+	%f - Playing
 	%e ️- ▶ or ⏸️
+	%s - Play progress
 
 	If a song has multiple artists, you can specify the upper limit of artists
 	to display with %Xa, where X is the number of artists to print, separated
@@ -49,6 +52,10 @@ var statusCmd = &cobra.Command{
 	the command will return an empty string. This may happen if Spotify is paused
 	for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if conf.Client == (spotify.Client{}) {
+			fmt.Println("Please run goify auth first to login")
+			os.Exit(1)
+		}
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
 			glog.Fatal(err)
@@ -91,6 +98,14 @@ func (stat Status) Format(state fmt.State, verb rune) {
 		fmt.Fprint(state, stat.Item.Album.Name)
 	case 't':
 		fmt.Fprint(state, stat.Item.SimpleTrack.Name)
+	case 's':
+		trackProgress := time.Duration(int64(stat.Progress) * int64(time.Millisecond))
+		trackLength := stat.Item.TimeDuration()
+		trackProgressMinutes := fmt.Sprintf("%.0f", trackProgress.Truncate(time.Minute).Minutes())
+		trackProgressSeconds := fmt.Sprintf("%02d", int64(trackProgress.Seconds())%60)
+		trackLengthMinutes := fmt.Sprintf("%.0f", trackLength.Truncate(time.Minute).Minutes())
+		trackLengthSeconds := fmt.Sprintf("%02d", int64(trackLength.Seconds())%60)
+		fmt.Fprint(state, trackProgressMinutes+":"+trackProgressSeconds+"/"+trackLengthMinutes+":"+trackLengthSeconds)
 	case 'a':
 		wid, set := state.Width()
 		if set {
