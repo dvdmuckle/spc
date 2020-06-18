@@ -22,8 +22,8 @@ The goal of this project is to present a simple, lightweight command line interf
 |---------|------------------|------------|
 | Auth | Yes | Yes |
 | Switch Device | Yes | No |
-| Play | No | Yes |
-| Pause | No | Yes |
+| Play | Yes | Yes |
+| Pause | Yes | Yes |
 | Toggle playback | No | No |
 | Search | No | Yes |
 | Volume | No | Yes |
