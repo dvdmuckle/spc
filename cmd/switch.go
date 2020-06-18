@@ -40,7 +40,6 @@ var switchCmd = &cobra.Command{
 			fmt.Println("Please run goify auth first to login")
 			os.Exit(1)
 		}
-		conf.Token = *helper.RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
 		shouldClear, _ := cmd.Flags().GetBool("clear")
 		shouldSwitch, _ := cmd.Flags().GetBool("transfer-only")
 		shouldPrint, _ := cmd.Flags().GetBool("print")
