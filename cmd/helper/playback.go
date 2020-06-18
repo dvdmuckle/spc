@@ -21,7 +21,7 @@ import (
 	"github.com/zmb3/spotify"
 )
 
-//Wraps the spotify.Client.Pause() method for easy error checking
+//Pause wraps the spotify.Client.Pause() method for easy error checking
 func Pause(conf *Config) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
@@ -30,7 +30,7 @@ func Pause(conf *Config) {
 	}
 }
 
-//Wraps the spotify.Client.Play() method for easy error checking
+//Play wraps the spotify.Client.Play() method for easy error checking
 func Play(conf *Config) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
