@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-    name: Build and Release
+    name: Build
     runs-on: ubuntu-latest
     steps:
 
@@ -35,7 +35,3 @@ jobs:
 
     - name: Test
       run: go test -v .
-
-    - name: Go Release Binary
-      uses: ngs/go-release.action@v1.0.2
-    
