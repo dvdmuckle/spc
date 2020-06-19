@@ -102,9 +102,6 @@ func initConfig() {
 		glog.Fatal("Error reading config file:", err)
 	}
 	viper.AutomaticEnv() // read in environment variables that match
-	if err := viper.WriteConfigAs(cfgFile); err != nil {
-		glog.Fatal("Error writing config file:", err)
-	}
 	conf.ClientID = viper.GetString("spotifyclientid")
 	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
 		glog.Fatal("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
