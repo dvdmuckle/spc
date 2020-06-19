@@ -50,6 +50,7 @@ var switchCmd = &cobra.Command{
 		switch {
 		case shouldPrint:
 			getDevices(&conf)
+			return
 		case shouldClear:
 			clearDeviceEntry(&conf)
 		case deviceToSet != "":
@@ -83,8 +84,8 @@ func init() {
 	switchCmd.Flags().StringP("set", "d", "", "DeviceID to switch to")
 	switchCmd.Flags().BoolP("clear", "c", false, "Clear the current device entry")
 	switchCmd.Flags().BoolP("transfer-only", "t", false, "Transfer playback to the currently configured device")
-	switchCmd.Flags().BoolP("print", "p", false, "Only print the currently configured device")
-	switchCmd.Flags().Bool("play", false, "Start playback on switch")
+	switchCmd.Flags().Bool("print", false, "Only print the currently configured device")
+	switchCmd.Flags().BoolP("play", "p", false, "Start playback on switch")
 }
 
 func transferPlayback(conf *helper.Config, shouldPlay bool) {
@@ -117,8 +118,9 @@ func getDevices(conf *helper.Config) {
 			fmt.Printf("Device configured: %s, %s\n", device.Name, device.ID.String())
 			return
 		}
-		fmt.Println("Device configured not available, or no device is configured")
 	}
+	fmt.Println("Device configured not available, or no device is configured")
+	return
 }
 
 func setDevice(conf *helper.Config, id spotify.ID) {
