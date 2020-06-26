@@ -26,7 +26,6 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"
-	"golang.org/x/oauth2"
 )
 
 type Status spotify.CurrentlyPlaying
@@ -54,9 +53,7 @@ var statusCmd = &cobra.Command{
 	the command will return an empty string. This may happen if Spotify is paused
 	for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if conf.Token != (oauth2.Token{}) {
-			helper.SetClient(&conf)
-		}
+		helper.SetClient(&conf)
 		if conf.Client == (spotify.Client{}) {
 			fmt.Println("Please run goify auth first to login")
 			os.Exit(1)
