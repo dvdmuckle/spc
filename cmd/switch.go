@@ -25,6 +25,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zmb3/spotify"
+	"golang.org/x/oauth2"
 )
 
 var switchCmd = &cobra.Command{
@@ -47,6 +48,13 @@ var switchCmd = &cobra.Command{
 		shouldPlay, _ := cmd.Flags().GetBool("play")
 		deviceToSet, _ := cmd.Flags().GetString("set")
 		justSwitch, _ := cmd.Flags().GetBool("config")
+		if conf.Token != (oauth2.Token{}) {
+			helper.SetClient(&conf)
+		}
+		if conf.Client == (spotify.Client{}) {
+			fmt.Println("Please run goify auth first to login")
+			os.Exit(1)
+		}
 		switch {
 		case shouldPrint:
 			getDevices(&conf)
