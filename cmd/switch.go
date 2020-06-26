@@ -37,10 +37,6 @@ var switchCmd = &cobra.Command{
 	and can also switch playback to the already configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf)
-		if conf.Client == (spotify.Client{}) {
-			fmt.Println("Please run goify auth first to login")
-			os.Exit(1)
-		}
 		shouldClear, _ := cmd.Flags().GetBool("clear")
 		shouldSwitch, _ := cmd.Flags().GetBool("transfer-only")
 		shouldPrint, _ := cmd.Flags().GetBool("print")

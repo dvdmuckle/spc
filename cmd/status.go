@@ -17,7 +17,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"time"
@@ -54,10 +53,6 @@ var statusCmd = &cobra.Command{
 	for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf)
-		if conf.Client == (spotify.Client{}) {
-			fmt.Println("Please run goify auth first to login")
-			os.Exit(1)
-		}
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
 			glog.Fatal(err)
