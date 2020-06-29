@@ -25,7 +25,6 @@ import (
 	"github.com/dvdmuckle/goify/cmd/helper"
 	"github.com/golang/glog"
 	"github.com/zmb3/spotify"
-	"golang.org/x/oauth2"
 
 	"github.com/spf13/cobra"
 
@@ -114,7 +113,4 @@ func initConfig() {
 		}
 	}
 	conf.DeviceID = spotify.ID(viper.GetString("device"))
-	if conf.Token != (oauth2.Token{}) {
-		helper.SetClient(&conf)
-	}
 }

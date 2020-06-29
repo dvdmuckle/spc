@@ -115,7 +115,8 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 //The Token field in the Config struct must be set
 func SetClient(conf *Config) {
 	if conf.Token == (oauth2.Token{}) {
-		glog.Fatal("SetClient called before setting Token field in Config struct")
+		fmt.Println("Please run goify auth first to login")
+		os.Exit(1)
 	}
 	conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
