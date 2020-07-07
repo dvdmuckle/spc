@@ -16,12 +16,8 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/dvdmuckle/goify/cmd/helper"
 	"github.com/spf13/cobra"
-	"github.com/zmb3/spotify"
 )
 
 // pauseCmd represents the pause command
@@ -31,10 +27,7 @@ var pauseCmd = &cobra.Command{
 	Long: `Will stop Spotify playback on the device most
 	recently playing music.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if conf.Client == (spotify.Client{}) {
-			fmt.Println("Please run goify auth first to login")
-			os.Exit(1)
-		}
+		helper.SetClient(&conf)
 		helper.Pause(&conf)
 	},
 }
