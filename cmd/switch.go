@@ -148,6 +148,10 @@ func fuzzySwitchDevice(conf *helper.Config) spotify.ID {
 			}
 		})
 	if err != nil {
+		if err.Error() == "abort" {
+			fmt.Println("Aborted switch")
+			os.Exit(0)
+		}
 		glog.Fatal(err)
 	}
 	return devices[idx].ID
