@@ -81,6 +81,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			glog.Fatal(err)
 		}
 	},
+	ValidArgs: []string{"track", "album", "playlist"},
 }
 
 func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify.URI {
