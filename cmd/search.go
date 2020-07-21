@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/dvdmuckle/goify/cmd/helper"
@@ -32,12 +33,14 @@ var searchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Seach for and play a track, album, or playlist",
 	Long: `Seach takes two arguments: the search type, and the query.
-Search type can be either track or album, with the rest of the arguments
+Search type can be an album, a track, or a playlist, with the rest of the arguments
 making up the search query. For example:
 
 	goify search album moving pictures
 	goify search track tom sawyer
-	goify search playlist happy vibes
+	goify search playlist prog monsters
+
+If a track is queried for, additional similar songs will be queued up.
 
 More advanced options are availble for the search query. For this,
 please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
@@ -73,7 +76,20 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		opts.DeviceID = &conf.DeviceID
 		switch searchType {
 		case "track":
+			//This lines up some songs to play after the search result plays
+			regexID := regexp.MustCompile(`(spotify:track:)(.*)`)
+			trackID := spotify.ID(regexID.FindStringSubmatch(string(toPlay))[2])
+			seeds := spotify.Seeds{Tracks: []spotify.ID{trackID}}
+			recommends, err := conf.Client.GetRecommendations(seeds, nil, nil)
+			if err != nil {
+				glog.Fatal(err)
+			}
+			var recommendURIs []spotify.URI
+			for _, track := range recommends.Tracks {
+				recommendURIs = append(recommendURIs, track.URI)
+			}
 			opts.URIs = append(opts.URIs, toPlay)
+			opts.URIs = append(opts.URIs, recommendURIs...)
 		case "album", "playlist":
 			opts.PlaybackContext = &toPlay
 		}
