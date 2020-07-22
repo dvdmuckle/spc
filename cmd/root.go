@@ -42,7 +42,7 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "spc",
 	Short: "Command line tool to control Spotify",
-	Long: `Goify is a simple command line tool to control Spotify using the Spotify API
+	Long: `Spc is a simple command line tool to control Spotify using the Spotify API
 to allow for cross platform use. It is designed to be simple and is limited in
 scope, and is best when paired with another more complicated tool.`,
 }
