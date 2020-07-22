@@ -20,7 +20,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
 )
 

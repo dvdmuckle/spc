@@ -22,7 +22,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
 	"github.com/zmb3/spotify"
 
@@ -40,7 +40,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "goify",
+	Use:   "spc",
 	Short: "Command line tool to control Spotify",
 	Long: `Goify is a simple command line tool to control Spotify using the Spotify API
 to allow for cross platform use. It is designed to be simple and is limited in
@@ -59,10 +59,10 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/goify/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/spc/config.yaml)")
 }
 
-// createConfig creates the config file at ~/.config/goify/config.yaml if it does not exist
+// createConfig creates the config file at ~/.config/spc/config.yaml if it does not exist
 func createConfig() {
 	// Find home directory.
 	home, err := homedir.Dir()
@@ -70,7 +70,7 @@ func createConfig() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	configPath := home + "/.config/goify"
+	configPath := home + "/.config/spc"
 	if err := os.MkdirAll(configPath, 0755); err != nil {
 		glog.Fatal("Error creating config path: ", err)
 	}
@@ -84,7 +84,7 @@ func createConfig() {
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
 			glog.Fatal("Error writing config file:", err)
 		}
-		fmt.Printf("Config file created at ~/.config/goify/config.yaml\n\n")
+		fmt.Printf("Config file created at ~/.config/spc/config.yaml\n\n")
 	}
 }
 

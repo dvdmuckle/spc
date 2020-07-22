@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"

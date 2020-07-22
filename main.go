@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/dvdmuckle/goify/cmd"
+import "github.com/dvdmuckle/spc/cmd"
 
 func main() {
 	cmd.Execute()

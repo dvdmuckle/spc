@@ -45,7 +45,7 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 	clientID = conf.ClientID
 	secret = conf.Secret
 	if clientID == "" || secret == "" {
-		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/goify/config.yaml")
+		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/spc/config.yaml")
 		os.Exit(1)
 	}
 
@@ -115,7 +115,7 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 //The Token field in the Config struct must be set
 func SetClient(conf *Config) {
 	if conf.Token == (oauth2.Token{}) {
-		fmt.Println("Please run goify auth first to login")
+		fmt.Println("Please run spc auth first to login")
 		os.Exit(1)
 	}
 	conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)

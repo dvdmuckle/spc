@@ -1,16 +1,16 @@
-# goify [Tentative Name]
+# spc
 
-![Go](https://github.com/dvdmuckle/goify/workflows/Go/badge.svg?branch=master)
+![Go](https://github.com/dvdmuckle/spc/workflows/Go/badge.svg?branch=master)
 
 A lightweight mutliplatform CLI for Spotify
 
 ## Setup
 
-To set up the app, run `goify` to generate a skeleton config file at `~/.config/goify/config.yaml`. Next, head to <http://developer.spotify.com/> to create a new Spotify app. Paste the ClientID and ClientSecret in the config as noted. You can now run `goify auth` to start the OAuth2 flow, which will have you grant the Spotify app you created, and thus goify, the correct API permissions.
+To set up the app, run `spc` to generate a skeleton config file at `~/.config/spc/config.yaml`. Next, head to <http://developer.spotify.com/> to create a new Spotify app. Paste the ClientID and ClientSecret in the config as noted. You can now run `spc auth` to start the OAuth2 flow, which will have you grant the Spotify app you created, and thus spc, the correct API permissions.
 
 ## Running
 
-Because this app is in constant development, please refer to `goify help` for what functionality is available in the app.
+Because this app is in constant development, please refer to `spc help` for what functionality is available in the app.
 
 ## Goals
 

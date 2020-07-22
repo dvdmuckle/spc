@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

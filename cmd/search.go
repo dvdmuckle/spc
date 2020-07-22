@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
@@ -36,9 +36,9 @@ var searchCmd = &cobra.Command{
 Search type can be an album, a track, or a playlist, with the rest of the arguments
 making up the search query. For example:
 
-	goify search album moving pictures
-	goify search track tom sawyer
-	goify search playlist prog monsters
+	spc search album moving pictures
+	spc search track tom sawyer
+	spc search playlist prog monsters
 
 If a track is queried for, additional similar songs will be queued up.
 

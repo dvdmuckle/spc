@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dvdmuckle/goify/cmd/helper"
+	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
