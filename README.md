@@ -25,8 +25,8 @@ The goal of this project is to present a simple, lightweight command line interf
 | Play | Yes | Yes |
 | Pause | Yes | Yes |
 | Toggle playback | No | No |
-| Search | No | Yes |
-| Volume | No | Yes |
+| Search | Yes | Yes |
+| Volume | Yes | Yes |
 | Status | Yes | Yes |
 
 ## Contributing
