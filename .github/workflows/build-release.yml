@@ -85,4 +85,3 @@ jobs:
         GOARCH: amd64
         GOOS: windows
         EXTRA_FILES: "LICENSE"
-"
