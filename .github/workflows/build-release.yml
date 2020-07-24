@@ -1,6 +1,4 @@
-on:
-  release:
-    types: [published, created]
+on: release
 name: Build Release
 jobs:
   release-linux-386:
