@@ -18,6 +18,7 @@ package cmd
 import (
 	"encoding/base64"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -45,6 +46,12 @@ var rootCmd = &cobra.Command{
 	Long: `Spc is a simple command line tool to control Spotify using the Spotify API
 to allow for cross platform use. It is designed to be simple and is limited in
 scope, and is best when paired with another more complicated tool.`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		//So glog doesn't tell us we're logging before parsing flags
+		//This is entirely bogus since it's parsing an empty string array
+		//Plug cobra handles all our flags anyways
+		flag.CommandLine.Parse([]string{})
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -60,6 +67,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/spc/config.yaml)")
+	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 }
 
 // createConfig creates the config file at ~/.config/spc/config.yaml if it does not exist
