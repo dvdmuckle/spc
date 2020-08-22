@@ -18,8 +18,8 @@ Name:           spc
 Release:        1%{?dist}
 Summary:        A lightweight multiplatform CLI for Spotify
 
-License:        Apache 2.0
-
+# Upstream license specification: Apache-2.0
+License:        ASL 2.0
 URL:            %{gourl}
 Source0:        %{gosource}
 
