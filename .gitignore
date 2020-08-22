@@ -7,3 +7,5 @@
 !go.*
 !.github/**
 vendor/*
+!LICENSE
+!spc.spec
