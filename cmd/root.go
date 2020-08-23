@@ -29,7 +29,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -57,7 +56,6 @@ scope, and is best when paired with another more complicated tool.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	createConfig()
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -70,43 +68,20 @@ func init() {
 	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 }
 
-// createConfig creates the config file at ~/.config/spc/config.yaml if it does not exist
-func createConfig() {
-	// Find home directory.
-	home, err := homedir.Dir()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	configPath := home + "/.config/spc"
-	if err := os.MkdirAll(configPath, 0755); err != nil {
-		glog.Fatal("Error creating config path: ", err)
-	}
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(configPath)
-	viper.SetConfigName("config")
-	cfgFile = fmt.Sprintf(configPath + "/config.yaml")
-	viper.SetDefault("spotifyclientid", "Your Spotify ClientID")
-	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
-	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config file:", err)
-		}
-		fmt.Printf("Config file created at ~/.config/spc/config.yaml\n\n")
-	}
-}
-
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
+		_ = helper.SetupConfig()
 		viper.SetConfigFile(cfgFile)
 	} else {
-		createConfig()
+		cfgFile = helper.SetupConfig()
 	}
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err != nil {
-		glog.Fatal("Error reading config file:", err)
+	if _, err := os.Stat(cfgFile); err == nil {
+		if err := viper.ReadInConfig(); err != nil {
+			glog.Fatal("Error reading config file: ", err)
+		}
 	}
 	viper.AutomaticEnv() // read in environment variables that match
 	conf.ClientID = viper.GetString("spotifyclientid")
