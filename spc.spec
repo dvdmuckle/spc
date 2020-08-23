@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             v0.4.1
+%global tag             v0.5
 %gometa
 Version:                %{tag}
 
@@ -36,6 +36,8 @@ Source0:        %{gosource}
 # BuildRequires:  golang(golang.org/x/oauth2)
 BuildRequires:  git
 
+Requires: bash-completion
+
 %description
 %{common_description}
 
@@ -47,11 +49,23 @@ BuildRequires:  git
 %build
 go mod vendor
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
+%{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
+%{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
+%{gobuilddir}/bin/spc completion fish > %{gobuilddir}/spc.fish
+
 
 %install
 %gopkginstall
 install -m 0755 -vd                     %{buildroot}%{_bindir}
 install -m 0755 -vp %{gobuilddir}/bin/* %{buildroot}%{_bindir}/
+mkdir -p %{buildroot}/usr/share/bash-completion/completions
+mkdir -p %{buildroot}/usr/share/zsh/site-functions
+mkdir -p %{buildroot}/usr/share/fish/vendor_functions.d
+install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
+install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
+install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/fish/vendor_functions.d/spc.fish
+
+
 
 %if %{with check}
 %check
@@ -62,10 +76,16 @@ install -m 0755 -vp %{gobuilddir}/bin/* %{buildroot}%{_bindir}/
 %doc README.md
 %license LICENSE
 %{_bindir}/*
+/usr/share/bash-completion/completions/spc
+/usr/share/zsh/site-functions/_spc
+/usr/share/fish/vendor_functions.d/spc.fish
+
 
 %gopkgfiles
 
 %changelog
+* Sun Aug 23 16:46:00 EDT 2020 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.5-1
+- Add config subcommand
+
 * Sat Aug 22 13:36:00 EDT 2020 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.4-1
 - Initial package
-
