@@ -47,6 +47,7 @@ Requires: bash-completion
 %goprep
 
 %build
+git checkout v%{tag}
 go mod vendor
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
