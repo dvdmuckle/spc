@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             v0.5
+%global tag             v0.5.1
 %gometa
 Version:                %{tag}
 
@@ -15,7 +15,7 @@ A lightweight multiplatform CLI for Spotify.}
 %global godocs          README.md
 
 Name:           spc
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        A lightweight multiplatform CLI for Spotify
 
 # Upstream license specification: Apache-2.0
@@ -81,6 +81,9 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %gopkgfiles
 
 %changelog
+* Mon Aug 24 14:01:00 EDT 2020 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.5.1-1
+- Fix pathing for config file in SetupConfig()
+
 * Sun Aug 23 16:46:00 EDT 2020 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.5-1
 - Add config subcommand
 

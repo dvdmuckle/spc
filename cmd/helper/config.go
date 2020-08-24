@@ -49,5 +49,5 @@ func SetupConfig() string {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(configPath)
 	viper.SetConfigName("config")
-	return configPath + "config.yaml"
+	return configPath + "/config.yaml"
 }
