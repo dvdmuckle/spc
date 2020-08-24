@@ -21,7 +21,7 @@ Summary:        A lightweight multiplatform CLI for Spotify
 # Upstream license specification: Apache-2.0
 License:        ASL 2.0
 URL:            %{gourl}
-Source0:        %{gosource}
+Source0:        https://github.com/dvdmuckle/spc/archive/v%{tag}.tar.gz
 
 # Using go mod vendor to get the build requirements, since
 # we would have to anyways for all the packages that don't
@@ -47,7 +47,6 @@ Requires: bash-completion
 %goprep
 
 %build
-git checkout v%{tag}
 go mod vendor
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
