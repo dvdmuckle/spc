@@ -15,13 +15,13 @@ A lightweight multiplatform CLI for Spotify.}
 %global godocs          README.md
 
 Name:           spc
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        A lightweight multiplatform CLI for Spotify
 
 # Upstream license specification: Apache-2.0
 License:        ASL 2.0
 URL:            %{gourl}
-Source0:        https://github.com/dvdmuckle/spc/archive/%{tag}.tar.gz
+Source0:        %{gosource}
 
 # Using go mod vendor to get the build requirements, since
 # we would have to anyways for all the packages that don't
@@ -51,6 +51,7 @@ go mod vendor
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
+%{gobuilddir}/bin/spc completion fish > %{gobuilddir}/spc.fish
 
 
 %install
@@ -62,6 +63,7 @@ mkdir -p %{buildroot}/usr/share/zsh/site-functions
 mkdir -p %{buildroot}/usr/share/fish/vendor_functions.d
 install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
 install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
+install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/fish/vendor_functions.d/spc.fish
 
 
 
@@ -76,6 +78,7 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %{_bindir}/*
 /usr/share/bash-completion/completions/spc
 /usr/share/zsh/site-functions/_spc
+/usr/share/fish/vendor_functions.d/spc.fish
 
 
 %gopkgfiles
