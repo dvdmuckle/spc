@@ -6,6 +6,21 @@ A lightweight mutliplatform CLI for Spotify
 
 ## Installation
 
+### macOS
+
+```bash
+brew install dvdmuckle/tap/spc
+```
+
+### Fedora Linux
+
+```bash
+sudo dnf copr enable dvdmuckle/spc
+sudo dnf install spc
+```
+
+### Other Platforms
+
 Download one of the releases and unarchive the `spc` binary somewhere in your `PATH`. Alternatively, download and install with:
 ``
 go get -u github.com/dvdmuckle/spc
@@ -36,8 +51,9 @@ The goal of this project is to present a simple, lightweight command line interf
 | Search | Yes | Yes |
 | Volume | Yes | Yes |
 | Status | Yes | Yes |
-| Skip Track | Yes | Yes
-| Previous Track | Yes | Yes
+| Skip Track | Yes | Yes |
+| Previous Track | Yes | Yes |
+| Config | Yes | No |
 
 ## Contributing
 
