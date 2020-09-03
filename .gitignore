@@ -10,3 +10,4 @@ vendor/*
 !LICENSE
 !spc.spec
 !Makefile
+.pc
