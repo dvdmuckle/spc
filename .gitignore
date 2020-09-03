@@ -11,3 +11,4 @@ vendor/*
 !spc.spec
 !Makefile
 .pc
+!debian/**
