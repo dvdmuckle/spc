@@ -32,7 +32,7 @@ var seekCmd = &cobra.Command{
 		duration := currentlyPlaying.Item.Duration / 1000
 		if position > duration {
 			fmt.Printf(
-				"The seek position must be at or under the duration of the currently playing song (%d seconds).",
+				"The seek position must be at or under the duration of the currently playing song (%d seconds).\n",
 				duration)
 			os.Exit(1)
 		}
