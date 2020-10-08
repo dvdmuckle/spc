@@ -29,6 +29,11 @@ var seekCmd = &cobra.Command{
 			glog.Fatal(err)
 		}
 
+		if currentlyPlaying.Item == nil {
+			fmt.Println("Could not obtain the currently playing song.")
+			os.Exit(1)
+		}
+
 		duration := currentlyPlaying.Item.Duration / 1000
 		if position > duration {
 			fmt.Printf(
