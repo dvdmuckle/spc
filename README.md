@@ -56,6 +56,7 @@ The goal of this project is to present a simple, lightweight command line interf
 | Skip Track | Yes | Yes |
 | Previous Track | Yes | Yes |
 | Config | Yes | No |
+| Seek | Yes | No |
 
 ## Contributing
 
