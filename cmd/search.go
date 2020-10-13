@@ -48,13 +48,13 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		helper.SetClient(&conf)
 		var searchType string
 		if len(args) < 2 {
-			fmt.Println("Please search for a track, album, or playlist")
+			fmt.Println("Please search for a track, album, playlist, or artist")
 			os.Exit(1)
 		}
-		if args[0] == "track" || args[0] == "album" || args[0] == "playlist" {
+		if args[0] == "track" || args[0] == "album" || args[0] == "playlist" || args[0] == "artist" {
 			searchType = args[0]
 		} else {
-			fmt.Println("Please search for a track, album, or playlist")
+			fmt.Println("Please search for a track, album, playlist, or artist")
 			os.Exit(1)
 		}
 		searchTerm := strings.Join(args[1:], " ")
@@ -67,6 +67,8 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeAlbum)
 		case "playlist":
 			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypePlaylist)
+		case "artist":
+			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeArtist)
 		}
 		if err != nil {
 			glog.Fatal(err)
@@ -126,6 +128,13 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 				return fmt.Sprintf("%s - %s", results.Playlists.Playlists[i].Name,
 					results.Playlists.Playlists[i].Owner.DisplayName)
 			})
+		case "Artist":
+			idx, err = fuzzyfinder.Find(
+				results.Artists.Artists,
+				func(i int) string {
+					return fmt.Sprintf("%s", results.Artists.Artists[i].Name,
+					results.Artists.Artists[i])
+				})
 	}
 	if err != nil {
 		if err.Error() == "abort" {
@@ -141,6 +150,8 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 		return results.Albums.Albums[idx].URI
 	case "playlist":
 		return results.Playlists.Playlists[idx].URI
+	case "artist":
+		return results.Artists.Artists[idx].URI
 	}
 	//The code should never get here because of our check of
 	//search types earlier, this is just to make the compiler
