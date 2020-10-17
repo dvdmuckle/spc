@@ -7,7 +7,7 @@ require (
 	github.com/ktr0731/go-fuzzyfinder v0.2.1
 	github.com/markbates/goth v1.65.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.0.0
+	github.com/spf13/cobra v1.1.0
 	github.com/spf13/viper v1.7.1
 	github.com/zmb3/spotify v0.0.0-20200422222148-5fe5f9535a2c
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
