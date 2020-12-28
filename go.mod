@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/ktr0731/go-fuzzyfinder v0.2.1
+	github.com/ktr0731/go-fuzzyfinder v0.3.1
 	github.com/markbates/goth v1.66.1
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.1.1
