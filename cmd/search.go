@@ -95,6 +95,11 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		case "album", "playlist", "artist":
 			opts.PlaybackContext = &toPlay
 		}
+		//If a user tries to play a track with shuffle on,
+		//they'll instead get the related tracks first
+		if err := conf.Client.Shuffle(false); err != nil {
+			glog.Fatal(err)
+		}
 		if err := conf.Client.PlayOpt(&opts); err != nil {
 			glog.Fatal(err)
 		}
