@@ -92,7 +92,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			}
 			opts.URIs = append(opts.URIs, toPlay)
 			opts.URIs = append(opts.URIs, recommendURIs...)
-		case "album", "playlist":
+		case "album", "playlist", "artist":
 			opts.PlaybackContext = &toPlay
 		}
 		if err := conf.Client.PlayOpt(&opts); err != nil {
@@ -128,13 +128,13 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 				return fmt.Sprintf("%s - %s", results.Playlists.Playlists[i].Name,
 					results.Playlists.Playlists[i].Owner.DisplayName)
 			})
-		case "artist":
-			idx, err = fuzzyfinder.Find(
-				results.Artists.Artists,
-				func(i int) string {
-					return fmt.Sprintf("%s", results.Artists.Artists[i].Name)
+	case "artist":
+		idx, err = fuzzyfinder.Find(
+			results.Artists.Artists,
+			func(i int) string {
+				return results.Artists.Artists[i].Name
 
-				})
+			})
 	}
 	if err != nil {
 		if err.Error() == "abort" {
@@ -152,9 +152,7 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 		return results.Playlists.Playlists[idx].URI
 	case "artist":
 		return results.Artists.Artists[idx].URI
-		//func (c *Client) GetArtistsTopTracks(artistID ID, country string) ([]FullTrack, error) {
 
-		}
 	}
 	//The code should never get here because of our check of
 	//search types earlier, this is just to make the compiler
