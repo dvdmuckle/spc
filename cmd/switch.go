@@ -117,7 +117,6 @@ func getDevices(conf *helper.Config) {
 		}
 	}
 	fmt.Println("Device configured not available, or no device is configured")
-	return
 }
 
 func setDevice(conf *helper.Config, id spotify.ID) {
