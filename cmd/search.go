@@ -86,10 +86,12 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			if err != nil {
 				glog.Fatal(err)
 			}
-			opts.URIs = append(opts.URIs, toPlay)
+			var recommendURIs []spotify.URI
 			for _, track := range recommends.Tracks {
-				opts.URIs = append(opts.URIs, track.URI)
+				recommendURIs = append(recommendURIs, track.URI)
 			}
+			opts.URIs = append(opts.URIs, toPlay)
+			opts.URIs = append(opts.URIs, recommendURIs...)
 		case "album", "playlist", "artist":
 			opts.PlaybackContext = &toPlay
 		}
