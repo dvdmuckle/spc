@@ -1,3 +1,11 @@
+spc (0.7.0-1) stable; urgency=medium
+
+  * New features include:
+  * Seek command
+  * Search command turns off shuffle
+  * Search for artists
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Fri, 13 Sep 2021 21:36:01 -0400
 spc (0.5.2-1) stable; urgency=medium
 
   * Initial release
