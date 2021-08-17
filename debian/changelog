@@ -1,4 +1,4 @@
-spc (0.7.0-1) stable; urgency=medium
+spc (0.7.0-1) focal; urgency=medium
 
   * New features include:
   * Seek command
