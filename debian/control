@@ -4,7 +4,8 @@ Uploaders: David Muckle <dvdmuckle@dvdmuckle.xyz>
 Section: devel
 Testsuite: autopkgtest-pkg-go
 Priority: optional
-Build-Depends: debhelper-compat (= 12),
+Build-Depends: bash-completion,
+               debhelper-compat (= 12),
                dh-golang,
                golang-any,
                golang-github-markbates-goth-dev,

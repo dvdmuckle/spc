@@ -1,3 +1,15 @@
+spc (0.7.0-3) focal; urgency=medium
+
+  * Bump for build system
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Tue, 17 Aug 2021 16:10:35 -0400
+
+spc (0.7.0-2) focal; urgency=medium
+
+  * Add bash completion
+
+ -- David Muckle <dvdmuckle@ubuntu>  Tue, 17 Aug 2021 15:51:26 -0400
+
 spc (0.7.0-1) focal; urgency=medium
 
   * New features include:
