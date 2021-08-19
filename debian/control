@@ -26,7 +26,7 @@ Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends}
 Built-Using: ${misc:Built-Using}
-Description: A lightweight multiplatform CLI for Spotify (program)
+Description: A lightweight multiplatform CLI for Spotify
  spc Go
  .
  A lightweight mutliplatform CLI for Spotify InstallationmacOS bash brew
