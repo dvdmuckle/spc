@@ -4,6 +4,8 @@ go-build: go-vendor
 .PHONY: go-vendor
 go-vendor:
 	go mod vendor
+clean:
+	rm spc
 .PHONY: rpm-build
 rpm-build:
 	mkdir -p rpm-build
@@ -25,6 +27,7 @@ rpm-build-docker:
 	docker run --privileged -it -v $(CURDIR):/spc fedora /bin/bash -c "dnf install -y mock mock-scm make go-rpm-macros go-srpm-macros; cd spc; $(MAKE) rpm-build"
 prepare-deb-build: go-build
 	spc completion bash > debian/spc.bash-completion
+	$(MAKE) clean
 	cd debian
 	dch -i -M -D focal
 	cd ..
