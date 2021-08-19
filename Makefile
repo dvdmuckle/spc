@@ -1,5 +1,5 @@
 .PHONY: go-build
-go-build:
+go-build: go-vendor
 	go build -o spc
 .PHONY: go-vendor
 go-vendor:
@@ -23,3 +23,9 @@ rpm-build-all-arch.%:
 rpm-build-docker:
 # This has to run privileged as mock does some mounting stuff that doesn't work otherwise
 	docker run --privileged -it -v $(CURDIR):/spc fedora /bin/bash -c "dnf install -y mock mock-scm make go-rpm-macros go-srpm-macros; cd spc; $(MAKE) rpm-build"
+prepare-deb-build: go-build
+	spc completion bash > debian/spc.bash-completion
+	cd debian
+	dch -i -M -D focal
+	cd ..
+	debuild -S -d

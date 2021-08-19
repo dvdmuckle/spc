@@ -10,3 +10,6 @@ vendor/*
 !LICENSE
 !spc.spec
 !Makefile
+.pc
+!debian/**
+debian/spc.bash-completion

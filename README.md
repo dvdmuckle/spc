@@ -12,6 +12,14 @@ A lightweight mutliplatform CLI for Spotify
 brew install dvdmuckle/tap/spc
 ```
 
+### Ubuntu Linux
+
+```bash
+sudo add-apt-repository ppa:dvdmuckle/spc
+sudo apt-get update
+sudo apt-get install spc
+```
+
 ### Fedora Linux
 
 ```bash
