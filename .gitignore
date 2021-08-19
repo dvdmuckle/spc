@@ -12,3 +12,4 @@ vendor/*
 !Makefile
 .pc
 !debian/**
+debian/spc.bash-completion
