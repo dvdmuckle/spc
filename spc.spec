@@ -81,6 +81,9 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %gopkgfiles
 
 %changelog
+* Thu Aug 19 2021 David Muckle dvdmuckle@dvdmuckle.xyz - 0.7.0-2
+- Allows for searching for artist
+
 * Mon Aug 24 14:01:00 EDT 2020 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.5.1-1
 - Fix pathing for config file in SetupConfig()
 
