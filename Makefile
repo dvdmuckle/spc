@@ -26,6 +26,6 @@ rpm-build-docker:
 prepare-deb-build: go-build
 	spc completion bash > debian/spc.bash-completion
 	cd debian
-	dch -i
+	dch -i -M -D focal
 	cd ..
 	debuild -S -d

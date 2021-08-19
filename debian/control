@@ -1,7 +1,7 @@
 Source: spc
-Maintainer: Debian Go Packaging Team <team+pkg-go@tracker.debian.org>
+Maintainer: David Muckle <dvdmuckle@dvdmuckle.xyz>
 Uploaders: David Muckle <dvdmuckle@dvdmuckle.xyz>
-Section: devel
+Section: sound
 Testsuite: autopkgtest-pkg-go
 Priority: optional
 Build-Depends: bash-completion,
