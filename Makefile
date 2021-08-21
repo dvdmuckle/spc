@@ -6,6 +6,9 @@ go-vendor:
 	go mod vendor
 clean:
 	rm spc
+	rm -rf rpm-build
+	rm -rf rpm-build*
+	rm -rf debbuild
 .PHONY: rpm-build
 rpm-build:
 	mkdir -p rpm-build
@@ -32,3 +35,5 @@ prepare-deb-build: go-build
 	dch -i -M -D focal
 	cd ..
 	debuild -S -d
+	mkdir -p debbuild
+	mv ../spc_* debbuild/
