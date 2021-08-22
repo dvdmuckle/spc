@@ -31,14 +31,15 @@ import (
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
 	Use:   "search",
-	Short: "Seach for and play a track, album, or playlist",
-	Long: `Seach takes two arguments: the search type, and the query.
-Search type can be an album, a track, or a playlist, with the rest of the arguments
+	Short: "Search for and play a track, album, playlist, or artist",
+	Long: `Search takes two arguments: the search type, and the query.
+Search type can be an album, a track, a playlist, or an artist, with the rest of the arguments
 making up the search query. For example:
 
 	spc search album moving pictures
 	spc search track tom sawyer
 	spc search playlist prog monsters
+	spc search artist rush
 
 If a track is queried for, additional similar songs will be queued up.
 
