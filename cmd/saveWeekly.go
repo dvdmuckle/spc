@@ -38,24 +38,19 @@ var saveWeeklyCmd = &cobra.Command{
 			playlistName = "Discover Weekly " + getPlaylistDate()
 		}
 		isPublic, _ := cmd.Flags().GetBool("public")
-		fmt.Println("Getting current user")
 		currentUser, err := conf.Client.CurrentUser()
-		fmt.Println("Getting current user")
 		if err != nil {
 			glog.Fatal(err)
 		}
-		fmt.Println("Making playlist")
 		newPlaylist, err := conf.Client.CreatePlaylistForUser(currentUser.User.ID, playlistName, playlistDescription, isPublic)
 		if err != nil {
 			glog.Fatal(err)
 		}
-		fmt.Println("Searching")
 		searchResult, err := conf.Client.Search("Discover Weekly", spotify.SearchTypePlaylist)
 		if err != nil {
 			glog.Fatal(err)
 		}
 		discoverPlaylistTracks := func(spotify.ID) spotify.PlaylistTrackPage {
-			fmt.Println("Getting playlist tracks")
 			playlistTracks, err := conf.Client.GetPlaylistTracks(searchResult.Playlists.Playlists[0].ID)
 			if err != nil {
 				glog.Fatal(err)
