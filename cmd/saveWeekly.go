@@ -44,6 +44,10 @@ var saveWeeklyCmd = &cobra.Command{
 		if err != nil {
 			glog.Fatal(err)
 		}
+		if deduplicatePlaylist(playlistName, currentUser.User.ID) {
+			fmt.Println("Discover Weekly already saved")
+			return
+		}
 		newPlaylist, err := conf.Client.CreatePlaylistForUser(currentUser.User.ID, playlistName, playlistDescription, isPublic)
 		if err != nil {
 			glog.Fatal(err)
@@ -64,7 +68,7 @@ var saveWeeklyCmd = &cobra.Command{
 			discoverPlaylistTrackIDs = append(discoverPlaylistTrackIDs, track.Track.ID)
 		}
 		conf.Client.AddTracksToPlaylist(newPlaylist.ID, discoverPlaylistTrackIDs...)
-
+		fmt.Printf("Discover Weekly saved as %s\n", playlistName)
 	},
 }
 
@@ -74,6 +78,18 @@ func getPlaylistDate() string {
 		date = date.AddDate(0, 0, -1)
 	}
 	return fmt.Sprintf("%d/%d/%d", date.Month(), date.Day(), date.Year())
+}
+func deduplicatePlaylist(playlistName string, user string) bool {
+	searchResults, err := conf.Client.Search(playlistName, spotify.SearchTypePlaylist)
+	if err != nil {
+		glog.Fatal(err)
+	}
+	for _, playlist := range searchResults.Playlists.Playlists {
+		if playlist.Owner.ID == user && playlist.Name == playlistName {
+			return true
+		}
+	}
+	return false
 }
 
 func init() {
