@@ -1,3 +1,9 @@
+spc (0.7.1-1) focal; urgency=medium
+
+  * Spelling correction in search command help
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Mon, 23 Aug 2021 22:22:18 -0400
+
 spc (0.7.0-5) focal; urgency=medium
 
   * Remove unecessary golang dependencies
