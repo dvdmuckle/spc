@@ -1,0 +1,26 @@
+on: release
+name: Trigger Fedora
+jobs:
+  build:
+    name: Submit a build from Fedora container
+    # Run in Fedora container on Ubuntu VM (no direct Fedora support)
+    container: fedora:latest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out proper version of sources
+        uses: actions/checkout@v1
+
+      - name: Install API token for copr-cli
+        env:
+          API_TOKEN_CONTENT: ${{ secrets.COPR_API_TOKEN }}
+        run: |
+          mkdir -p "$HOME/.config"
+          echo "$API_TOKEN_CONTENT" > "$HOME/.config/copr"
+
+      - name: Install tooling for source RPM build
+        run: |
+          dnf -y install copr-cli
+
+      - name: Submit the build by uploading the spec
+        run: copr build dvdmuckle/spc *.spec
