@@ -81,6 +81,9 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %gopkgfiles
 
 %changelog
+* Tue Aug 24 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.7.1-1
+- Fix typo in search command help
+
 * Thu Aug 19 2021 David Muckle dvdmuckle@dvdmuckle.xyz - 0.7.0-2
 - Allows for searching for artist
 
