@@ -1,0 +1,44 @@
+spc (0.7.1-1) focal; urgency=medium
+
+  * Spelling correction in search command help
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Mon, 23 Aug 2021 22:22:18 -0400
+
+spc (0.7.0-5) focal; urgency=medium
+
+  * Remove unecessary golang dependencies
+  * Use longsleep golang backports to get go 1.16
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Sat, 21 Aug 2021 19:12:08 -0400
+
+spc (0.7.0-4) focal; urgency=medium
+
+  * Tweak package description and section
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Thu, 19 Aug 2021 00:54:42 -0400
+
+spc (0.7.0-3) focal; urgency=medium
+
+  * Bump for build system
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Tue, 17 Aug 2021 16:10:35 -0400
+
+spc (0.7.0-2) focal; urgency=medium
+
+  * Add bash completion
+
+ -- David Muckle <dvdmuckle@ubuntu>  Tue, 17 Aug 2021 15:51:26 -0400
+
+spc (0.7.0-1) focal; urgency=medium
+
+  * New features include:
+  * Seek command
+  * Search command turns off shuffle
+  * Search for artists
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Fri, 13 Sep 2021 21:36:01 -0400
+spc (0.5.2-1) stable; urgency=medium
+
+  * Initial release
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Wed, 02 Sep 2020 21:36:01 -0400
