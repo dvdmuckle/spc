@@ -1,4 +1,4 @@
-on: push
+on: release
 name: Trigger Fedora Copr Build
 jobs:
   build:
