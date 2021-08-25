@@ -39,3 +39,5 @@ prepare-deb-build: go-build
 deb-bump-version:
 	dch -i -M -D focal
 bump-and-prepare-deb-build: deb-bump-version prepare-deb-build
+rpm-bump-spec:
+	rpmdev-bumpspec spc.spec
