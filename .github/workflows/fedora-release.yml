@@ -1,5 +1,5 @@
 on: release
-name: Trigger Fedora
+name: Trigger Fedora Copr Build
 jobs:
   build:
     name: Submit a build from Fedora container
@@ -19,7 +19,7 @@ jobs:
           echo "$API_TOKEN_CONTENT" > "$HOME/.config/copr"
       - name: Check spec for bumped version
         run: |
-          grep -q ${{ github.event.release.tag_name } spc.spec || echo "Version not bumped!"
+          grep -q ${{ github.event.release.tag_name }} spc.spec || echo "Version not bumped!"
 
       - name: Install tooling for source RPM build
         run: |
