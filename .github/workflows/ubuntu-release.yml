@@ -1,4 +1,4 @@
-on: push
+on: release
 name: Trigger Ubuntu Launchpad Build
 jobs:
   build:
