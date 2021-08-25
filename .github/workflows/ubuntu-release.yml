@@ -1,0 +1,28 @@
+on: release
+name: Trigger Ubuntu Launchpad Build
+jobs:
+  build:
+    name: Submit a build from Ubuntu container
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out proper version of sources
+        uses: actions/checkout@v1
+
+      - uses: crazy-max/ghaction-import-gpg@v1
+        env:
+           GPG_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Check changelog for bumped version
+        run: |
+          grep -q ${{ github.event.release.tag_name } debian/changelog || echo "Version not bumped!"
+      - name: Install build dependencies
+        run: |
+          sudo apt-get install -y equivs devscripts dput make
+          sudo mk-build-deps --install debian/control
+      - name: Prep build requirements
+        run: |
+          make prepare-deb-build
+      - name: Send to Launchpad
+        run: |
+          dput ppa:dvdmuckle/spc debbuild/*source.changes

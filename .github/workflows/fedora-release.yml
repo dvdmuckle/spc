@@ -17,10 +17,13 @@ jobs:
         run: |
           mkdir -p "$HOME/.config"
           echo "$API_TOKEN_CONTENT" > "$HOME/.config/copr"
+      - name: Check spec for bumped version
+        run: |
+          grep -q ${{ github.event.release.tag_name } spc.spec || echo "Version not bumped!"
 
       - name: Install tooling for source RPM build
         run: |
           dnf -y install copr-cli
 
       - name: Submit the build by uploading the spec
-        run: copr build dvdmuckle/spc *.spec
+        run: copr build dvdmuckle/spc spc.spec
