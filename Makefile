@@ -33,7 +33,7 @@ prepare-deb-build: go-build
 	$(MAKE) clean
 	cd debian
 	cd ..
-	debuild -S -d
+	yes | debuild -S -d
 	mkdir -p debbuild
 	mv ../spc_* debbuild/
 deb-bump-version:
