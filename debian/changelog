@@ -1,3 +1,9 @@
+spc (0.7.1-2) focal; urgency=medium
+
+  * Test build without GPG signing
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Tue, 24 Aug 2021 22:02:42 -0400
+
 spc (0.7.1-1) focal; urgency=medium
 
   * Spelling correction in search command help
