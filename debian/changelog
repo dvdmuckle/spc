@@ -1,3 +1,10 @@
+spc (0.8.0-1) focal; urgency=medium
+
+  * New save-weekly command
+  * Change in-memory token refresh to only refresh if token expired 
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Wed, 25 Aug 2021 21:13:28 -0400
+
 spc (0.7.1-2) focal; urgency=medium
 
   * Test build without GPG signing
