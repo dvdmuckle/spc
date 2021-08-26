@@ -72,7 +72,7 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		http.HandleFunc("/callback", completeAuth)
 		go http.ListenAndServe(":8888", nil)
 		url := authenticator.AuthURL(state)
-		fmt.Println("Please log in to Spotify by clicking the following link:", url)
+		fmt.Println("Please log in to Spotify by clicking the following link, or copying it to a web browser:", url)
 		//wait for auth to finish
 		client := <-ch
 
