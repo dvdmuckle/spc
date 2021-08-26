@@ -17,7 +17,7 @@ var seekCmd = &cobra.Command{
 	Long: `Seek to a specific position in the currently playing song from Spotify. This command requires
 	exactly one argument, a number between 0 and the length of the currently playing song in seconds to seek to.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		position, err := strconv.Atoi(args[0])
 		if err != nil {
 			fmt.Println("Passed value for seconds must be an integer.")

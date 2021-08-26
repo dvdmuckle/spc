@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/golang/glog"
 	spotifyAuth "github.com/markbates/goth/providers/spotify"
@@ -113,11 +114,21 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 
 //SetClient sets the Client field of Config struct to a valid Spotify client
 //The Token field in the Config struct must be set
-func SetClient(conf *Config) {
+func SetClient(conf *Config, cfgFile string) {
 	if conf.Token == (oauth2.Token{}) {
 		fmt.Println("Please run spc auth first to login")
 		os.Exit(1)
 	}
-	conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
+	if time.Now().After(conf.Token.Expiry) {
+		conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
+		marshalToken, err := json.Marshal(conf.Token)
+		if err != nil {
+			glog.Fatal(err)
+		}
+		viper.Set("auth", string(marshalToken))
+		if err := viper.WriteConfigAs(cfgFile); err != nil {
+			glog.Fatal("Error writing config:", err)
+		}
+	}
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
 }

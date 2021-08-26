@@ -28,7 +28,7 @@ var nextCmd = &cobra.Command{
 	Long:  `Skips the track currently playing. Will use the currently configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var opts spotify.PlayOptions
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		opts.DeviceID = &conf.DeviceID
 		conf.Client.NextOpt(&opts)
 	},
