@@ -36,7 +36,7 @@ var switchCmd = &cobra.Command{
 	This will also switch playback to the device selected if playback is active,
 	and can also switch playback to the already configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		shouldClear, _ := cmd.Flags().GetBool("clear")
 		shouldSwitch, _ := cmd.Flags().GetBool("transfer-only")
 		shouldPrint, _ := cmd.Flags().GetBool("print")

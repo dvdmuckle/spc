@@ -46,7 +46,7 @@ If a track is queried for, additional similar songs will be queued up.
 More advanced options are availble for the search query. For this,
 please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		var searchType string
 		if len(args) < 2 {
 			fmt.Println("Please search for a track, album, playlist, or artist")
