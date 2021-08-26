@@ -18,7 +18,7 @@ jobs:
            PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       - name: Check changelog for bumped version
         run: |
-          grep -q ${{ github.event.release.tag_name }} debian/changelog || { echo "Version not bumped!" && exit 1 }
+          grep -q ${{ github.event.release.tag_name }} debian/changelog || { echo "Version not bumped!" && exit 1; }
       - name: Install build dependencies
         run: |
           sudo add-apt-repository -y ppa:longsleep/golang-backports
