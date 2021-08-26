@@ -1,3 +1,8 @@
+spc (0.8.1-1) focal; urgency=medium
+
+  * More clarity on how to treat auth link for terminals that don't support links
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Wed, 25 Aug 2021 21:47:51 -0400
+
 spc (0.8.0-1) focal; urgency=medium
 
   * New save-weekly command

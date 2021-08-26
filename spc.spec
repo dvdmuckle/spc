@@ -81,6 +81,9 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %gopkgfiles
 
 %changelog
+* Thu Aug 26 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.8.1-1
+- More clarity on how to treat auth link for terminals that don't support links
+
 * Thu Aug 26 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.8.0-1
 - New save-weekly command
 - Change in-memory token refresh to only refresh if token expired
