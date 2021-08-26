@@ -33,7 +33,7 @@ var volumeCmd = &cobra.Command{
 	Long: `Sets the volume for Spotify. This command requires exactly
 	one argument, a number between 0 and 100 to set the volume to.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		vol, err := strconv.ParseInt(args[0], 10, 0)
 		if err != nil {
 			fmt.Println("Volume is not a number")

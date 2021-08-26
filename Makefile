@@ -32,8 +32,12 @@ prepare-deb-build: go-build
 	./spc completion bash > debian/spc.bash-completion
 	$(MAKE) clean
 	cd debian
-	dch -i -M -D focal
 	cd ..
-	debuild -S -d
+	yes | debuild -S -d
 	mkdir -p debbuild
 	mv ../spc_* debbuild/
+deb-bump-version:
+	dch -i -M -D focal
+bump-and-prepare-deb-build: deb-bump-version prepare-deb-build
+rpm-bump-spec:
+	rpmdev-bumpspec spc.spec

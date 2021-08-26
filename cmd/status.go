@@ -52,7 +52,7 @@ var statusCmd = &cobra.Command{
 	the command will return an empty string. This may happen if Spotify is paused
 	for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
 			glog.Fatal(err)

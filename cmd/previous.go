@@ -28,7 +28,7 @@ var previousCmd = &cobra.Command{
 	Long:  `Goes back to the previously playing track. Will use the currently configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var opts spotify.PlayOptions
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, cfgFile)
 		opts.DeviceID = &conf.DeviceID
 		//We want to go to the last song playing, but
 		//spotify.Previous() will rewind the current song
