@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.8.0
+%global tag             0.8.1
 Version:                %{tag}
 %gometa
 
