@@ -1,6 +1,15 @@
+GIT_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 .PHONY: go-build
 go-build: go-vendor
-	go build -o spc
+ifneq (${GIT_BRANCH}, main)
+ifneq ($(shell git status --porcelain), "")
+	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git rev-parse --short HEAD)-dirty"
+else
+	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git rev-parse --short HEAD)"
+endif
+else
+	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git describe --tags --abbrev=0)"
+endif
 .PHONY: go-vendor
 go-vendor:
 	go mod vendor
@@ -13,9 +22,9 @@ clean:
 rpm-build:
 	mkdir -p rpm-build
 ifdef mock-version
-	mock --scm-enable --scm-option method=git --scm-option package=spc --scm-option spec=spc.spec --scm-option branch=dev --scm-option write_tar=True --scm-option git_get='git clone https://github.com/dvdmuckle/spc.git' --enable-network --resultdir rpm-build -r ${mock-version}
+	mock --scm-enable --scm-option method=git --scm-option package=spc --scm-option spec=spc.spec --scm-option branch=${GIT_BRANCH} --scm-option write_tar=True --scm-option git_get='git clone https://github.com/dvdmuckle/spc.git' --enable-network --resultdir rpm-build -r ${mock-version}
 else 
-	mock --scm-enable --scm-option method=git --scm-option package=spc --scm-option spec=spc.spec --scm-option branch=dev --scm-option write_tar=True --scm-option git_get='git clone https://github.com/dvdmuckle/spc.git' --enable-network --resultdir rpm-build
+	mock --scm-enable --scm-option method=git --scm-option package=spc --scm-option spec=spc.spec --scm-option branch=${GIT_BRANCH} --scm-option write_tar=True --scm-option git_get='git clone https://github.com/dvdmuckle/spc.git' --enable-network --resultdir rpm-build
 endif
 .PHONY: rpm-build-all-arch
 VERSION_ID = $(shell cat /etc/os-release | grep VERSION_ID | cut -d '=' -f2)
@@ -23,6 +32,7 @@ rpm-build-all-arch: $(shell ls /etc/mock/ | grep fedora-${VERSION_ID} | cut -d '
 rpm-build-all-arch.%: ARCH=$*
 rpm-build-all-arch.%:
 	echo "Building RPM for ${ARCH}"
+	$(MAKE) rpm-build mock-version=fedora-${VERSION_ID}-${ARCH} 
 	mock --scm-enable --scm-option method=git --scm-option package=spc --scm-option spec=spc.spec --scm-option branch=dev --scm-option write_tar=True --scm-option git_get='git clone https://github.com/dvdmuckle/spc.git' --enable-network --resultdir rpm-build-${ARCH} -r fedora-${VERSION_ID}-${ARCH}
 	echo "Finished RPM for ${ARCH}"
 rpm-build-docker:

@@ -16,7 +16,7 @@ jobs:
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.15
+        go-version: ^1.16
       id: go
 
     - name: Check out code into the Go module directory
@@ -31,7 +31,9 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v .
+      run: go build -v -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.pull_request.head.sha }}" .
 
     - name: Test
-      run: go test -v .
+      run: |
+        go test -v .
+        ./spc version
