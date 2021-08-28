@@ -31,7 +31,7 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.pull_request.head.sha }}" .
+      run: go build -v -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.pull_request.head.sha }}" .
 
     - name: Test
       run: |
