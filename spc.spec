@@ -48,6 +48,7 @@ Requires: bash-completion
 
 %build
 go mod vendor
+export LDFLAGS="-X %{import_path}/cmd.version=%{tag}"
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh

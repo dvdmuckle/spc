@@ -1,6 +1,15 @@
+GIT_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 .PHONY: go-build
 go-build: go-vendor
-	go build -o spc
+ifneq (${GIT_BRANCH}, main)
+ifneq ($(shell git status --porcelain), "")
+	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git rev-parse --short HEAD)-dirty"
+else
+	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git rev-parse --short HEAD)"
+endif
+else
+	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git describe --tags --abbrev=0)"
+endif
 .PHONY: go-vendor
 go-vendor:
 	go mod vendor
