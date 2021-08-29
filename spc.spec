@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.8.1
+%global tag             0.9.0
 Version:                %{tag}
 %gometa
 
@@ -48,6 +48,7 @@ Requires: bash-completion
 
 %build
 go mod vendor
+export LDFLAGS="-X %{goipath}/cmd.version=%{tag}"
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
@@ -81,6 +82,9 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %gopkgfiles
 
 %changelog
+* Sun Aug 29 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.9.0-1
+- Add version command
+
 * Thu Aug 26 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.8.1-1
 - More clarity on how to treat auth link for terminals that don't support links
 
