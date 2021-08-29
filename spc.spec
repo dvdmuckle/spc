@@ -64,7 +64,7 @@ mkdir -p %{buildroot}/usr/share/zsh/site-functions
 mkdir -p %{buildroot}/usr/share/fish/vendor_functions.d
 install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
 install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
-install -m 0744 -vpt %{gobuilddir}/spcdocs %{_mandir}/man1/
+install -m 0744 -vpt %{_mandir}/man1/ %{gobuilddir}/spcdocs/spc* 
 
 
 
