@@ -52,6 +52,7 @@ export LDFLAGS="-X %{goipath}/cmd.version=%{tag}"
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
+%{gobuilddir}/bin/spc docs man %{_mandir}/man1/
 
 
 %install
@@ -77,6 +78,7 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %{_bindir}/*
 /usr/share/bash-completion/completions/spc
 /usr/share/zsh/site-functions/_spc
+%{_mandir}/man1/spc*
 
 
 %gopkgfiles
