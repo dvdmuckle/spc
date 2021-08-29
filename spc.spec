@@ -52,7 +52,7 @@ export LDFLAGS="-X %{goipath}/cmd.version=%{tag}"
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
-%{gobuilddir}/bin/spc docs man %{_mandir}/man1/
+%{gobuilddir}/bin/spc docs man %{gobuilddir}/spcdocs
 
 
 %install
@@ -64,6 +64,7 @@ mkdir -p %{buildroot}/usr/share/zsh/site-functions
 mkdir -p %{buildroot}/usr/share/fish/vendor_functions.d
 install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
 install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
+install -m 0744 -vpt %{gobuilddir}/spcdocs %{_mandir}/man1/
 
 
 
