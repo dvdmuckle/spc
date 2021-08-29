@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
+	"os"
+
+	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 )
@@ -23,11 +27,34 @@ import (
 // docsCmd represents the docs command
 var docsCmd = &cobra.Command{
 	Use:   "docs",
-	Short: "Generates man pages for spc",
-	Long:  `Generates man pages for spc. This is mostly used for Homebrew installations.`,
+	Short: "Generates docs fpr spc",
+	Long: `Generates docs for spc.
+	This command is mostly used for automation purposes, but can be used to generate
+	either man page or markdown documentation. The first argument is which
+	kind of documtation to generate, either man or markdown.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		doc.GenManTree()
+		if len(args) < 1 {
+			fmt.Println("Please supply a doc type, either man or markdown")
+			os.Exit(1)
+		}
+		if len(args) > 1 {
+			fmt.Println("Only one doc type can be generated at a time")
+			os.Exit(1)
+		}
+		if args[0] == "man" {
+			err := doc.GenManTree(rootCmd, nil, "./docs")
+			if err != nil {
+				glog.Fatal(err)
+			}
+
+		} else if args[0] == "markdown" {
+			err := doc.GenMarkdownTree(rootCmd, "./docs")
+			if err != nil {
+				glog.Fatal(err)
+			}
+		}
 	},
+	ValidArgs: []string{"man", "markdown"},
 }
 
 func init() {
