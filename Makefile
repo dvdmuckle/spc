@@ -50,4 +50,4 @@ deb-bump-version:
 	dch -i -M -D focal
 bump-and-prepare-deb-build: deb-bump-version prepare-deb-build
 rpm-bump-spec:
-	rpmdev-bumpspec spc.spec
+	rpmdev-bumpspec -u "David Muckle <dvdmuckle@dvdmuckle.xyz>" spc.spec

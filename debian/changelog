@@ -1,3 +1,9 @@
+spc (0.9.0-1) focal; urgency=medium
+
+  * Add version command
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Sat, 28 Aug 2021 20:21:54 -0400
+
 spc (0.8.1-1) focal; urgency=medium
 
   * More clarity on how to treat auth link for terminals that don't support links

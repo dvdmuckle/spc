@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.8.1
+%global tag             0.9.0
 Version:                %{tag}
 %gometa
 
@@ -82,6 +82,9 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %gopkgfiles
 
 %changelog
+* Sun Aug 29 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.9.0-1
+- Add version command
+
 * Thu Aug 26 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.8.1-1
 - More clarity on how to treat auth link for terminals that don't support links
 
