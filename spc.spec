@@ -62,9 +62,9 @@ install -m 0755 -vp %{gobuilddir}/bin/* %{buildroot}%{_bindir}/
 mkdir -p %{buildroot}/usr/share/bash-completion/completions
 mkdir -p %{buildroot}/usr/share/zsh/site-functions
 mkdir -p %{buildroot}/usr/share/fish/vendor_functions.d
-install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
-install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
-install -m 0744 -vpt %{_mandir}/man1/ %{gobuilddir}/spcdocs/spc* 
+install -m 0644 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
+install -m 0644 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
+install -m 0644 -vpt %{buildroot}/%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc* 
 
 
 
