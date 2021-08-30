@@ -29,10 +29,10 @@ var docsCmd = &cobra.Command{
 	Use:   "docs",
 	Short: "Generates docs fpr spc",
 	Long: `Generates docs for spc.
-	This command is mostly used for automation purposes, but can be used to generate
-	either man page or markdown documentation. The first argument is which
-	kind of documtation to generate, either man or markdown. The second is the path for the
-	generated docs. If the path does not exist, it will be created.`,
+This command is mostly used for automation purposes, but can be used to generate
+either man page or markdown documentation. The first argument is which
+kind of documtation to generate, either man or markdown. The second is the path for the
+generated docs. If the path does not exist, it will be created.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println("Please supply a doc type, either man or markdown")

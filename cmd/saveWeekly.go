@@ -30,8 +30,8 @@ var saveWeeklyCmd = &cobra.Command{
 	Use:   "save-weekly",
 	Short: "Saves the current Spotify Discover Weekly playlist",
 	Long: `Saves the current Spotify Discover Weekly playlist.
-	 Note this cannot bring back old Spotify Discover Weekly playlists, it can
-	  only save the current playlist`,
+Note this cannot bring back old Spotify Discover Weekly playlists, it can
+only save the current playlist`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
 		playlistName, _ := cmd.Flags().GetString("name")

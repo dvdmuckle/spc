@@ -27,15 +27,15 @@ var completionCmd = &cobra.Command{
 	Use:   "completion",
 	Short: "Generate shell autocompletion",
 	Long: `Generates shell autocompletion
-	
-	The following shells can have autocompletion generated:
-	
-	bash
-	zsh
-	fish
-	powershell
-	
-	For fish, the flag --fish-description can be toggled to includes descriptions in the autocomplete`,
+
+The following shells can have autocompletion generated:
+
+bash
+zsh
+fish
+powershell
+
+For fish, the flag --fish-description can be toggled to includes descriptions in the autocomplete`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 1 {
 			fmt.Println("Please provide a shell for which to generate autocompletion")
