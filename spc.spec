@@ -73,6 +73,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gocheck
 %endif
 
+%post
+mandb
+
 %files
 %doc README.md
 %license LICENSE
