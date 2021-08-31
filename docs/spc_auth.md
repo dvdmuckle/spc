@@ -5,7 +5,7 @@ Authenticates with Spotify
 ### Synopsis
 
 Authenticates with Spotify by printout out a login link, which will then save your access token to the config file.
- Use this command after the initial login to refresh your access token
+Use this command after the initial login to refresh your access token
 
 ```
 spc auth [flags]
