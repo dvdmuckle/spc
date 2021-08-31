@@ -52,6 +52,7 @@ export LDFLAGS="-X %{goipath}/cmd.version=%{tag}"
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
+%{gobuilddir}/bin/spc docs man %{gobuilddir}/spcdocs
 
 
 %install
@@ -60,9 +61,10 @@ install -m 0755 -vd                     %{buildroot}%{_bindir}
 install -m 0755 -vp %{gobuilddir}/bin/* %{buildroot}%{_bindir}/
 mkdir -p %{buildroot}/usr/share/bash-completion/completions
 mkdir -p %{buildroot}/usr/share/zsh/site-functions
-mkdir -p %{buildroot}/usr/share/fish/vendor_functions.d
-install -m 0744 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
-install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
+mkdir -p %{buildroot}%{_mandir}/man1
+install -m 0644 -vp %{gobuilddir}/spc.bash %{buildroot}/usr/share/bash-completion/completions/spc
+install -m 0644 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functions/_spc
+install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc* 
 
 
 
@@ -77,6 +79,7 @@ install -m 0744 -vp %{gobuilddir}/spc.zsh %{buildroot}/usr/share/zsh/site-functi
 %{_bindir}/*
 /usr/share/bash-completion/completions/spc
 /usr/share/zsh/site-functions/_spc
+%{_mandir}/man1/spc*
 
 
 %gopkgfiles

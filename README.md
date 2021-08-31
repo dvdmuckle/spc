@@ -43,29 +43,12 @@ To set up the app, run `spc config` to generate a skeleton config file at `~/.co
 
 ## Running
 
-Because this app is in constant development, please refer to `spc help` for what functionality is available in the app.
+Check out either `spc help` or the [docs pages](docs/spc.md) for help on how to use spc.
 
 ## Goals
 
-The goal of this project is to present a simple, lightweight command line interface for Spotify, inspired by [spotify-tui](https://github.com/Rigellute/spotify-tui). Support for play, pause, volume, and a simple search are all that are considered right now. The roadmap may change in the future.
-
-## Roadmap
-
-| Feature | Implemented yet? | Essential? |
-|---------|------------------|------------|
-| Auth | Yes | Yes |
-| Switch Device | Yes | No |
-| Play | Yes | Yes |
-| Pause | Yes | Yes |
-| Toggle playback | No | No |
-| Search | Yes | Yes |
-| Volume | Yes | Yes |
-| Status | Yes | Yes |
-| Skip Track | Yes | Yes |
-| Previous Track | Yes | Yes |
-| Config | Yes | No |
-| Seek | Yes | No |
+The goal of this project is to present a simple, lightweight command line interface for Spotify, inspired by [spotify-tui](https://github.com/Rigellute/spotify-tui). Support for play, pause, volume, and a simple search are all that are considered right now. More complicated tasks like managing playlists are not considered at this time.
 
 ## Contributing
 
-For feature requests, feel free to create an issue or creating a PR changing the above roadmap.
+For feature requests, feel free to create an issue or submit a PR with your changes.

@@ -40,9 +40,10 @@ rpm-build-docker:
 	docker run --privileged -it -v $(CURDIR):/spc fedora /bin/bash -c "dnf install -y mock mock-scm make go-rpm-macros go-srpm-macros; cd spc; $(MAKE) rpm-build"
 prepare-deb-build: go-build
 	./spc completion bash > debian/spc.bash-completion
+	./spc docs man docs
+	ls docs > debian/manpages
+	sed -ie 's/^/docs\//' debian/manpages
 	$(MAKE) clean
-	cd debian
-	cd ..
 	yes | debuild -S -d
 	mkdir -p debbuild
 	mv ../spc_* debbuild/

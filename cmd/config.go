@@ -25,9 +25,9 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Initializes a config file",
 	Long: `Creates a config file in ~/.config/spc/config.yaml.
-	The config file will then have to be manually adjusted to add the
-	Spotify ClientID and the Spotify Client Secret as noted in the 
-	config file.`,
+The config file will then have to be manually adjusted to add the
+Spotify ClientID and the Spotify Client Secret as noted in the 
+config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.CreateConfig(cfgFile)
 	},
