@@ -38,11 +38,13 @@ rpm-build-all-arch.%:
 rpm-build-docker:
 # This has to run privileged as mock does some mounting stuff that doesn't work otherwise
 	docker run --privileged -it -v $(CURDIR):/spc fedora /bin/bash -c "dnf install -y mock mock-scm make go-rpm-macros go-srpm-macros; cd spc; $(MAKE) rpm-build"
+deb-build-docker:
+	docker run --privileged -it -v $(CURDIR):/spc -v /run/user/1000/gnupg/S.gpg-agent:/run/user/1000/gnupg/S.gpg-agent -v ${HOME}/.gnupg:/root/.gnupg -e DEBIAN_FRONTEND=noninteractive -e GPG_TTY=`tty` ubuntu /bin/bash -c "ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime; apt-get update; apt-get install -y equivs devscripts dput make gpg software-properties-common; apt-add-repository -y ppa:longsleep/golang-backports; cd /spc; mk-build-deps --install -t 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y' debian/control; make prepare-deb-build"
 prepare-deb-build: go-build
 	./spc completion bash > debian/spc.bash-completion
-	./spc docs man docs
-	ls docs > debian/manpages
-	sed -ie 's/^/docs\//' debian/manpages
+	./spc docs man spcdocs
+	ls spcdocs > debian/manpages
+	sed -i -e 's/^/spcdocs\//' debian/manpages
 	$(MAKE) clean
 	yes | debuild -S -d
 	mkdir -p debbuild
