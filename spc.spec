@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.9.0
+%global tag             0.10.0
 Version:                %{tag}
 %gometa
 
@@ -85,6 +85,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Thu Sep 02 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.10.0-1
+- Man pages and docs command
+
 * Sun Aug 29 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.9.0-1
 - Add version command
 
