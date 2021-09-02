@@ -31,7 +31,7 @@ var volumeCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Short:   "Set volume for Spotify",
 	Long: `Sets the volume for Spotify. This command requires exactly
-	one argument, a number between 0 and 100 to set the volume to.`,
+one argument, a number between 0 and 100 to set the volume to.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
 		vol, err := strconv.ParseInt(args[0], 10, 0)

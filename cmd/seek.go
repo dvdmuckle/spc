@@ -30,7 +30,7 @@ var seekCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Short: "Seek to a specific position in the currently playing song from Spotify",
 	Long: `Seek to a specific position in the currently playing song from Spotify. This command requires
-	exactly one argument, a number between 0 and the length of the currently playing song in seconds to seek to.`,
+exactly one argument, a number between 0 and the length of the currently playing song in seconds to seek to.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
 		position, err := strconv.Atoi(args[0])

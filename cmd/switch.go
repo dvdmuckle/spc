@@ -31,10 +31,10 @@ var switchCmd = &cobra.Command{
 	Use:   "switch",
 	Short: "Set device to use for all callbacks",
 	Long: `Set the device to use when controlling Spotify playback.
-	If this entry is empty, it will default to the currently playing device.
-	You can clear the set device entry if the device is no longer active.
-	This will also switch playback to the device selected if playback is active,
-	and can also switch playback to the already configured device.`,
+If this entry is empty, it will default to the currently playing device.
+You can clear the set device entry if the device is no longer active.
+This will also switch playback to the device selected if playback is active,
+and can also switch playback to the already configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
 		shouldClear, _ := cmd.Flags().GetBool("clear")

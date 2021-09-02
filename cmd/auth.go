@@ -25,8 +25,8 @@ import (
 var authCmd = &cobra.Command{
 	Use:   "auth",
 	Short: "Authenticates with Spotify",
-	Long: `Authenticates with Spotify by printout out a login link, which will then save your access token to the config file
-	       Use this command after the initial login to refresh your access token`,
+	Long: `Authenticates with Spotify by printout out a login link, which will then save your access token to the config file.
+Use this command after the initial login to refresh your access token`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.Auth(cmd, viper.GetViper(), cfgFile, &conf)
 	},

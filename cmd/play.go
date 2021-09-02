@@ -24,8 +24,7 @@ import (
 var playCmd = &cobra.Command{
 	Use:   "play",
 	Short: "Start Spotify playback",
-	Long: `Will start Spotify playback on the device most
-	recently playing music.`,
+	Long:  `Will start Spotify playback on the device most recently playing music.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
 		helper.Play(&conf)

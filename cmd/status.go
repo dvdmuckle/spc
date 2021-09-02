@@ -34,23 +34,23 @@ var statusCmd = &cobra.Command{
 	Short: "Get the currently playing song from Spotify",
 	Long: `Get the currently playing song from Spotify
 
-	A format string can be passed with --format or -f to specify what
-	the status printout should look like. The following fields are available:
+A format string can be passed with --format or -f to specify what
+the status printout should look like. The following fields are available:
 
-	%a - Artist
-	%t - Track
-	%b - Album
-	%f - Playing
-	%e ️- ▶ or ⏸️
-	%s - Play progress
+%a - Artist
+%t - Track
+%b - Album
+%f - Playing
+%e ️- ▶ or ⏸️
+%s - Play progress
 
-	If a song has multiple artists, you can specify the upper limit of artists
-	to display with %Xa, where X is the number of artists to print, separated
-	by commas.
-	
-	If there is no currently playing song on Spotify, regardless of format argument
-	the command will return an empty string. This may happen if Spotify is paused
-	for an extended period of time`,
+If a song has multiple artists, you can specify the upper limit of artists
+to display with %Xa, where X is the number of artists to print, separated
+by commas.
+
+If there is no currently playing song on Spotify, regardless of format argument
+the command will return an empty string. This may happen if Spotify is paused
+for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
 		status, err := conf.Client.PlayerCurrentlyPlaying()

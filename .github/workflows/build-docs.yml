@@ -1,0 +1,43 @@
+name: Build Docs
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+        token: ${{ secrets.PAT }}
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.16
+      id: go
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Build Binary
+      run: go build -v -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.pull_request.head.sha }}" .
+
+    - name: Generate Docs
+      run: ./spc docs markdown docs
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Update docs
+        file_pattern: docs/*.md
+      
+    

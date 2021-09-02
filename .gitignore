@@ -11,5 +11,8 @@ vendor/*
 !spc.spec
 !Makefile
 .pc
-!debian/**
-debian/spc.bash-completion
+!debian/rules
+!debian/control
+!debian/copyright
+!debian/changelog
+!debian/source/format
