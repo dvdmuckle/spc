@@ -20,3 +20,4 @@ jobs:
         with:
           tag: ${{ steps.vars.outputs.tag }}
           version: ${{ steps.vars.outputs.tag }}
+          config-name: release-drafter.yml
