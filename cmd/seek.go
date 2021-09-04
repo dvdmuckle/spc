@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 David Muckle <dvdmuckle@dvdmuckle.xyz>
+Copyright © 2021 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
@@ -30,13 +31,28 @@ var seekCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Short: "Seek to a specific position in the currently playing song from Spotify",
 	Long: `Seek to a specific position in the currently playing song from Spotify. This command requires
-exactly one argument, a number between 0 and the length of the currently playing song in seconds to seek to.`,
+exactly one argument, either a number between 0 and the length of the song in seconds, or a timestamp in
+the form of minutes:seconds.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf, cfgFile)
-		position, err := strconv.Atoi(args[0])
-		if err != nil {
-			fmt.Println("Passed value for seconds must be an integer.")
-			os.Exit(1)
+		var position int
+		if strings.Contains(args[0], ":") {
+			var (
+				minutes int
+				seconds int
+			)
+			_, err := fmt.Sscanf(args[0], "%d:%d", &minutes, &seconds)
+			if err != nil {
+				glog.Fatal(err)
+			}
+			position = minutes*60 + seconds
+		} else {
+			var err error
+			position, err = strconv.Atoi(args[0])
+			if err != nil {
+				fmt.Println("Passed value for seconds must be an integer.")
+				os.Exit(1)
+			}
 		}
 
 		currentlyPlaying, err := conf.Client.PlayerCurrentlyPlaying()
@@ -52,8 +68,8 @@ exactly one argument, a number between 0 and the length of the currently playing
 		duration := currentlyPlaying.Item.Duration / 1000
 		if position > duration {
 			fmt.Printf(
-				"The seek position must be at or under the duration of the currently playing song (%d seconds).\n",
-				duration)
+				"The seek position must be at or under the duration of the currently playing song (%d seconds, or %d:%d).\n",
+				duration, duration/60, duration%60)
 			os.Exit(1)
 		}
 
