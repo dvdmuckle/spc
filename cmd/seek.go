@@ -43,7 +43,8 @@ the form of minutes:seconds.`,
 			)
 			_, err := fmt.Sscanf(args[0], "%d:%d", &minutes, &seconds)
 			if err != nil {
-				glog.Fatal(err)
+				fmt.Println("Timestamp must be numbers in the form of minutes:seconds")
+				os.Exit(1)
 			}
 			position = minutes*60 + seconds
 		} else {
