@@ -1,3 +1,9 @@
+spc (0.10.1-1) focal; urgency=medium
+
+  * Seek command now accepts timestamps
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Sat, 04 Sep 2021 23:54:49 -0400
+
 spc (0.10.0-1) focal; urgency=medium
 
   * Man pages and docs command 

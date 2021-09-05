@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.10.0
+%global tag             0.10.1
 Version:                %{tag}
 %gometa
 
@@ -85,6 +85,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Sun Sep 05 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.10.1-1
+- Seek command now accepts timestamps
+
 * Thu Sep 02 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.10.0-1
 - Man pages and docs command
 
