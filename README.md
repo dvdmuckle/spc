@@ -31,8 +31,14 @@ sudo dnf install spc
 
 Download one of the releases and unarchive the `spc` binary somewhere in your `PATH`. Alternatively, download and install with:
 ``
-go get -u github.com/dvdmuckle/spc
+go install github.com/dvdmuckle/spc@latest
 ``
+
+Or use the latest release tag:
+``
+go install github.com/dvdmuckle/spc@v0.10.1
+``
+
 Make sure `$GOPATH/bin` is in your `PATH` for this to work.
 
 ## Setup
