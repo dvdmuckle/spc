@@ -28,3 +28,13 @@ The only method for commiting to the `main` branch is via PR from the `dev` bran
 ## Publishing A Release
 
 Once the tag has been pushed, it will kick off drafting a new release. If everything looks good with the release, it can then be published. This will kick off creating archives with the `spc` binary for all supported operating systems and architectures, as well as send build data to Copr and Launchpad for Linux package builds. Of note, the Copr job watches build progress in Copr, and will fail if the Copr build fails. The Launchpad job is a fire and forget, if the Launchpad build fails there will be a notification via email.
+
+## Recovering From A Failed Release
+
+In the case of a failed release, for example failing to bump the version for Linux packages, the release process will need to be restarted. The failed release will need to be deleted, as well as its associated tag.
+
+```bash
+git tag -d <failed release tag>
+```
+
+From there, the release process can be restarted with creating a new PR into `main`, merging the PR, tagging the merge commit in `main` with the tag, and pushing the tag. This will also recreate the release draft, which can then be published.
