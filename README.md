@@ -36,7 +36,7 @@ go install github.com/dvdmuckle/spc@latest
 
 Or use the latest release tag:
 ``
-go install github.com/dvdmuckle/spc@v0.10.1
+go install github.com/dvdmuckle/spc@v$(curl https://api.github.com/repos/dvdmuckle/spc/releases/latest | grep tag_name |  awk '{print $2}' | tr -d '"' | tr -d ',')
 ``
 
 Make sure `$GOPATH/bin` is in your `PATH` for this to work.
