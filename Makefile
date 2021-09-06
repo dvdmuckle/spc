@@ -2,7 +2,7 @@ GIT_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 .PHONY: go-build
 go-build: go-vendor
 ifneq (${GIT_BRANCH}, main)
-ifneq ($(shell git status --porcelain), "")
+ifneq ($(shell git status --porcelain), \n)
 	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git rev-parse --short HEAD)-dirty"
 else
 	go build -o spc -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(shell git rev-parse --short HEAD)"
