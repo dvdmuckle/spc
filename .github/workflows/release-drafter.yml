@@ -21,6 +21,7 @@ jobs:
           config-name: release-drafter.yml
           disable-autolabeler: true
           publish: false
+          name: ${{ steps.vars.outputs.tag }}
   tag-with-semver-v:
     runs-on: ubuntu-latest
     steps:
@@ -36,4 +37,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.vars.outputs.tag }}
-          name: ${{ steps.vars.outputs.tag }}
