@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.10.1
+%global tag             0.10.2
 Version:                %{tag}
 %gometa
 
@@ -85,6 +85,10 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Mon Sep 06 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.10.2-1
+- Specify device on all playback commands
+- Check owner of Discover Weekly playlist before saving
+
 * Sun Sep 05 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.10.1-1
 - Seek command now accepts timestamps
 
