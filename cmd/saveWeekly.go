@@ -56,8 +56,15 @@ only save the current playlist`,
 		if err != nil {
 			glog.Fatal(err)
 		}
+		var discoverPlaylist spotify.ID
+		for _, playlist := range searchResult.Playlists.Playlists {
+			if playlist.Owner.ID == "spotify" {
+				discoverPlaylist = playlist.ID
+				break
+			}
+		}
 		discoverPlaylistTracks := func(spotify.ID) spotify.PlaylistTrackPage {
-			playlistTracks, err := conf.Client.GetPlaylistTracks(searchResult.Playlists.Playlists[0].ID)
+			playlistTracks, err := conf.Client.GetPlaylistTracks(discoverPlaylist)
 			if err != nil {
 				glog.Fatal(err)
 			}
