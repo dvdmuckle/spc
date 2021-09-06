@@ -24,6 +24,7 @@ import (
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
+	"github.com/zmb3/spotify"
 )
 
 var seekCmd = &cobra.Command{
@@ -74,7 +75,7 @@ the form of minutes:seconds.`,
 			os.Exit(1)
 		}
 
-		err = conf.Client.Seek(position * 1000)
+		err = conf.Client.SeekOpt(position*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 		if err != nil {
 			glog.Fatal(err)
 		}

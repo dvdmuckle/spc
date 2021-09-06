@@ -1,3 +1,10 @@
+spc (0.10.2-1) focal; urgency=medium
+
+  * Specify device on all playback commands
+  * Check owner of Discover Weekly playlist before saving
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Mon, 06 Sep 2021 18:30:29 -0400
+
 spc (0.10.1-1) focal; urgency=medium
 
   * Seek command now accepts timestamps
