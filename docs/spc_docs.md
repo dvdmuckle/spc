@@ -7,7 +7,7 @@ Generates docs fpr spc
 Generates docs for spc.
 This command is mostly used for automation purposes, but can be used to generate
 either man page or markdown documentation. The first argument is which
-kind of documtation to generate, either man or markdown. The second is the path for the
+kind of documentation to generate, either man or markdown. The second is the path for the
 generated docs. If the path does not exist, it will be created.
 
 ```
