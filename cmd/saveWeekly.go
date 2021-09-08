@@ -63,7 +63,7 @@ only save the current playlist`,
 				break
 			}
 		}
-		discoverPlaylistTracks := func(spotify.ID) spotify.PlaylistTrackPage {
+		discoverPlaylistTracks := func() spotify.PlaylistTrackPage {
 			playlistTracks, err := conf.Client.GetPlaylistTracks(discoverPlaylist)
 			if err != nil {
 				glog.Fatal(err)
@@ -71,7 +71,7 @@ only save the current playlist`,
 			return *playlistTracks
 		}
 		var discoverPlaylistTrackIDs []spotify.ID
-		for _, track := range discoverPlaylistTracks(searchResult.Playlists.Playlists[0].ID).Tracks {
+		for _, track := range discoverPlaylistTracks().Tracks {
 			discoverPlaylistTrackIDs = append(discoverPlaylistTrackIDs, track.Track.ID)
 		}
 		conf.Client.AddTracksToPlaylist(newPlaylist.ID, discoverPlaylistTrackIDs...)
