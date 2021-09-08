@@ -23,4 +23,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.0 // indirect
+	github.com/zalando/go-keyring v0.1.1
 )

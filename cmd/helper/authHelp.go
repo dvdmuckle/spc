@@ -20,12 +20,14 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/user"
 	"time"
 
 	"github.com/golang/glog"
 	spotifyAuth "github.com/markbates/goth/providers/spotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	keyring "github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
 )
@@ -38,6 +40,11 @@ var (
 	clientID      string
 	secret        string
 	state         = "ringdingthing"
+	curUser       = func user.User { curUser, err := user.Current().User
+					if err != nil {
+						glog.Fatal(err)
+					}
+					return curUser
 )
 
 func completeAuth(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +84,7 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		if err != nil {
 			glog.Fatal(err)
 		}
+		keyring.Set("spc")
 		viper.Set("auth", string(marshalToken))
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
 			glog.Fatal("Error writing config:", err)
