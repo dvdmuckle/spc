@@ -40,11 +40,6 @@ var (
 	clientID      string
 	secret        string
 	state         = "ringdingthing"
-	curUser       = func user.User { curUser, err := user.Current().User
-					if err != nil {
-						glog.Fatal(err)
-					}
-					return curUser
 )
 
 func completeAuth(w http.ResponseWriter, r *http.Request) {
@@ -67,6 +62,10 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) {
 	clientID = conf.ClientID
 	secret = conf.Secret
+	curUser, err := user.Current()
+	if err != nil {
+		glog.Fatal(err)
+	}
 	if clientID == "" || secret == "" {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/spc/config.yaml")
 		os.Exit(1)
@@ -84,10 +83,8 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		if err != nil {
 			glog.Fatal(err)
 		}
-		keyring.Set("spc")
-		viper.Set("auth", string(marshalToken))
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
+			glog.Fatal("Error saving token to keyring", err)
 		}
 	} else {
 		fmt.Println("Getting token...")
@@ -112,9 +109,8 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		if err != nil {
 			glog.Fatal(err)
 		}
-		viper.Set("auth", string(marshalToken))
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
+			glog.Fatal("Error saving token to keyring", err)
 		}
 		fmt.Println("Login successful as", user.ID)
 	}
@@ -148,9 +144,12 @@ func SetClient(conf *Config, cfgFile string) {
 		if err != nil {
 			glog.Fatal(err)
 		}
-		viper.Set("auth", string(marshalToken))
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+		curUser, err := user.Current()
+		if err != nil {
+			glog.Fatal(err)
+		}
+		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
+			glog.Fatal("Error saving token to keyring", err)
 		}
 	}
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
