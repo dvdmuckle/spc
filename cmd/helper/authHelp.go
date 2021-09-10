@@ -133,7 +133,7 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 
 //SetClient sets the Client field of Config struct to a valid Spotify client
 //The Token field in the Config struct must be set
-func SetClient(conf *Config, cfgFile string) {
+func SetClient(conf *Config) {
 	curUser, err := user.Current()
 	if err != nil {
 		glog.Fatal(err)

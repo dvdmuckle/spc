@@ -35,7 +35,7 @@ var seekCmd = &cobra.Command{
 exactly one argument, either a number between 0 and the length of the song in seconds, or a timestamp in
 the form of minutes:seconds.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf, cfgFile)
+		helper.SetClient(&conf)
 		var position int
 		if strings.Contains(args[0], ":") {
 			var (
