@@ -134,6 +134,19 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 //SetClient sets the Client field of Config struct to a valid Spotify client
 //The Token field in the Config struct must be set
 func SetClient(conf *Config, cfgFile string) {
+	curUser, err := user.Current()
+	if err != nil {
+		glog.Fatal(err)
+	}
+	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" {
+		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
+			glog.Fatal(err)
+		}
+	} else {
+		fmt.Println("Please run spc auth first to login")
+		os.Exit(1)
+	}
+	//I'm 99% certain this isn't a case we can run into, but still...
 	if conf.Token == (oauth2.Token{}) {
 		fmt.Println("Please run spc auth first to login")
 		os.Exit(1)

@@ -17,16 +17,13 @@ package cmd
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
-	"os/user"
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
-	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 
 	"github.com/spf13/cobra"
@@ -92,17 +89,6 @@ func initConfig() {
 		glog.Fatal("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
-	}
-	curUser, err := user.Current()
-	if err != nil {
-		glog.Fatal(err)
-	}
-	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" {
-		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
-			glog.Fatal(err)
-		}
-	} else {
-		glog.Fatal(err)
 	}
 	conf.DeviceID = spotify.ID(viper.GetString("device"))
 }
