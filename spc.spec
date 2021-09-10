@@ -35,9 +35,10 @@ Source0:        %{gosource}
 # Package does not exist: BuildRequires:  golang(github.com/zmb3/spotify)
 # BuildRequires:  golang(golang.org/x/oauth2)
 BuildRequires:  git
-BuildRequires:  dbus-X11
+BuildRequires:  dbus-x11
 
 Requires: bash-completion
+Requires: dbus-x11
 
 %description
 %{common_description}
