@@ -27,7 +27,7 @@ import (
 	spotifyAuth "github.com/markbates/goth/providers/spotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	keyring "github.com/zalando/go-keyring"
+	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
 )

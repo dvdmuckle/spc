@@ -21,10 +21,12 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/user"
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/golang/glog"
+	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 
 	"github.com/spf13/cobra"
@@ -91,10 +93,16 @@ func initConfig() {
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}
-	if viper.GetString("auth") != "" {
-		if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
+	curUser, err := user.Current()
+	if err != nil {
+		glog.Fatal(err)
+	}
+	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" {
+		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
 			glog.Fatal(err)
 		}
+	} else {
+		glog.Fatal(err)
 	}
 	conf.DeviceID = spotify.ID(viper.GetString("device"))
 }
