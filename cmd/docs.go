@@ -45,6 +45,11 @@ generated docs. If the path does not exist, it will be created.`,
 		if err := os.MkdirAll(args[1], 0755); err != nil {
 			glog.Fatal("Error creating docs path: ", err)
 		}
+		if genTag, err := cmd.Flags().GetBool("gen-tags"); genTag && err == nil {
+			rootCmd.DisableAutoGenTag = false
+		} else if err != nil {
+			glog.Fatal(err)
+		}
 		if args[0] == "man" {
 			err := doc.GenManTree(rootCmd, nil, args[1])
 			if err != nil {
@@ -63,4 +68,5 @@ generated docs. If the path does not exist, it will be created.`,
 
 func init() {
 	rootCmd.AddCommand(docsCmd)
+	docsCmd.Flags().Bool("gen-tags", false, "Add autogentags to generated docs")
 }

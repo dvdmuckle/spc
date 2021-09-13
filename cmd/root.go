@@ -51,6 +51,7 @@ scope, and is best when paired with another more complicated tool.`,
 		//Plug cobra handles all our flags anyways
 		flag.CommandLine.Parse([]string{})
 	},
+	DisableAutoGenTag: true,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
