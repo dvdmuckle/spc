@@ -31,19 +31,24 @@ var docsCmd = &cobra.Command{
 	Long: `Generates docs for spc.
 This command is mostly used for automation purposes, but can be used to generate
 either man page or markdown documentation. The first argument is which
-kind of documtation to generate, either man or markdown. The second is the path for the
+kind of documentation to generate, either man or markdown. The second is the path for the
 generated docs. If the path does not exist, it will be created.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 || args[0] != "man" && args[0] != "markdown" {
 			fmt.Println("Please supply a doc type, either man or markdown")
 			os.Exit(1)
 		}
-		if len(args) > 2 {
+		if len(args) != 2 {
 			fmt.Println("Only two args are valid, the doc type and the path")
 			os.Exit(1)
 		}
 		if err := os.MkdirAll(args[1], 0755); err != nil {
 			glog.Fatal("Error creating docs path: ", err)
+		}
+		if genTag, err := cmd.Flags().GetBool("gen-tags"); genTag && err == nil {
+			rootCmd.DisableAutoGenTag = false
+		} else if err != nil {
+			glog.Fatal(err)
 		}
 		if args[0] == "man" {
 			err := doc.GenManTree(rootCmd, nil, args[1])
@@ -63,4 +68,5 @@ generated docs. If the path does not exist, it will be created.`,
 
 func init() {
 	rootCmd.AddCommand(docsCmd)
+	docsCmd.Flags().Bool("gen-tags", false, "Add autogentags to generated docs")
 }

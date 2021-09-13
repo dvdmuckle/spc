@@ -1,3 +1,12 @@
+spc (1.0.0-2) focal; urgency=medium
+
+  * Save token to keyring
+  * Error on no path supplied to docs command
+  * By default remove autogen tag from docs
+  * Various fixes 
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Sun, 12 Sep 2021 23:40:53 -0400
+
 spc (0.10.2-1) focal; urgency=medium
 
   * Specify device on all playback commands

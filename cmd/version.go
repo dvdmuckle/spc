@@ -18,6 +18,8 @@ package cmd
 import (
 	"fmt"
 
+	"runtime/debug"
+
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +31,13 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version of spc",
 	Long:  `Print the version of spc`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if version == "" {
+			mainModule, ok := debug.ReadBuildInfo()
+			if !ok {
+				fmt.Println("Error getting version")
+			}
+			version = mainModule.Main.Version
+		}
 		fmt.Println(version)
 	},
 }

@@ -20,12 +20,14 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/user"
 	"time"
 
 	"github.com/golang/glog"
 	spotifyAuth "github.com/markbates/goth/providers/spotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
 )
@@ -60,6 +62,10 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) {
 	clientID = conf.ClientID
 	secret = conf.Secret
+	curUser, err := user.Current()
+	if err != nil {
+		glog.Fatal(err)
+	}
 	if clientID == "" || secret == "" {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/spc/config.yaml")
 		os.Exit(1)
@@ -77,9 +83,8 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		if err != nil {
 			glog.Fatal(err)
 		}
-		viper.Set("auth", string(marshalToken))
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
+			glog.Fatal("Error saving token to keyring", err)
 		}
 	} else {
 		fmt.Println("Getting token...")
@@ -104,9 +109,8 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		if err != nil {
 			glog.Fatal(err)
 		}
-		viper.Set("auth", string(marshalToken))
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
+			glog.Fatal("Error saving token to keyring", err)
 		}
 		fmt.Println("Login successful as", user.ID)
 	}
@@ -129,7 +133,20 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 
 //SetClient sets the Client field of Config struct to a valid Spotify client
 //The Token field in the Config struct must be set
-func SetClient(conf *Config, cfgFile string) {
+func SetClient(conf *Config) {
+	curUser, err := user.Current()
+	if err != nil {
+		glog.Fatal(err)
+	}
+	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" {
+		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
+			glog.Fatal(err)
+		}
+	} else {
+		fmt.Println("Please run spc auth first to login")
+		os.Exit(1)
+	}
+	//I'm 99% certain this isn't a case we can run into, but still...
 	if conf.Token == (oauth2.Token{}) {
 		fmt.Println("Please run spc auth first to login")
 		os.Exit(1)
@@ -140,9 +157,12 @@ func SetClient(conf *Config, cfgFile string) {
 		if err != nil {
 			glog.Fatal(err)
 		}
-		viper.Set("auth", string(marshalToken))
-		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+		curUser, err := user.Current()
+		if err != nil {
+			glog.Fatal(err)
+		}
+		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
+			glog.Fatal("Error saving token to keyring", err)
 		}
 	}
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
