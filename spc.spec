@@ -52,7 +52,7 @@ export LDFLAGS="-X %{goipath}/cmd.version=%{tag}"
 %gobuild -o %{gobuilddir}/bin/spc %{goipath}
 %{gobuilddir}/bin/spc completion bash > %{gobuilddir}/spc.bash
 %{gobuilddir}/bin/spc completion zsh > %{gobuilddir}/spc.zsh
-%{gobuilddir}/bin/spc docs --gentags=true man %{gobuilddir}/spcdocs
+%{gobuilddir}/bin/spc docs --gen-tags=true man %{gobuilddir}/spcdocs
 
 
 %install
