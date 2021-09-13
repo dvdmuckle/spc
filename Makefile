@@ -42,7 +42,7 @@ deb-build-docker:
 	docker run --privileged -it -v $(CURDIR):/spc -v /run/user/1000/gnupg/S.gpg-agent:/run/user/1000/gnupg/S.gpg-agent -v ${HOME}/.gnupg:/root/.gnupg -e DEBIAN_FRONTEND=noninteractive -e GPG_TTY=`tty` ubuntu /bin/bash -c "ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime; apt-get update; apt-get install -y equivs devscripts dput make gpg software-properties-common; apt-add-repository -y ppa:longsleep/golang-backports; cd /spc; mk-build-deps --install -t 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y' debian/control; make prepare-deb-build"
 prepare-deb-build: go-build
 	./spc completion bash > debian/spc.bash-completion
-	./spc docs man spcdocs
+	./spc docs --gen-tags=true  man spcdocs
 	ls spcdocs > debian/manpages
 	sed -i -e 's/^/spcdocs\//' debian/manpages
 	$(MAKE) clean
