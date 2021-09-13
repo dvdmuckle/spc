@@ -1,4 +1,4 @@
-spc (1.0.0-2) focal; urgency=medium
+spc (1.0.0-1) focal; urgency=medium
 
   * Save token to keyring
   * Error on no path supplied to docs command
