@@ -68,5 +68,5 @@ generated docs. If the path does not exist, it will be created.`,
 
 func init() {
 	rootCmd.AddCommand(docsCmd)
-	docsCmd.Flags().Bool("gen-tags", true, "Add autogentags to generated docs")
+	docsCmd.Flags().Bool("gen-tags", false, "Add autogentags to generated docs")
 }
