@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             0.10.2
+%global tag             1.0.0
 Version:                %{tag}
 %gometa
 
@@ -86,6 +86,12 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Mon Sep 13 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.0.0-1
+- Save token to keyring
+- Error on no path supplied to docs command
+- By default remove autogen tag from docs
+- Various fixes 
+
 * Mon Sep 06 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 0.10.2-1
 - Specify device on all playback commands
 - Check owner of Discover Weekly playlist before saving
