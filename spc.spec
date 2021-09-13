@@ -37,6 +37,7 @@ Source0:        %{gosource}
 BuildRequires:  git
 
 Requires: bash-completion
+Requires: dbus-x11
 
 %description
 %{common_description}

@@ -17,7 +17,6 @@ package cmd
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -90,11 +89,6 @@ func initConfig() {
 		glog.Fatal("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
-	}
-	if viper.GetString("auth") != "" {
-		if err := json.Unmarshal([]byte(viper.GetString("auth")), &conf.Token); err != nil {
-			glog.Fatal(err)
-		}
 	}
 	conf.DeviceID = spotify.ID(viper.GetString("device"))
 }
