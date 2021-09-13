@@ -38,7 +38,7 @@ generated docs. If the path does not exist, it will be created.`,
 			fmt.Println("Please supply a doc type, either man or markdown")
 			os.Exit(1)
 		}
-		if len(args) > 2 {
+		if len(args) != 2 {
 			fmt.Println("Only two args are valid, the doc type and the path")
 			os.Exit(1)
 		}
