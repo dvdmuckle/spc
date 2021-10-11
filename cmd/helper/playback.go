@@ -16,24 +16,23 @@ limitations under the License.
 package helper
 
 import (
-	"github.com/golang/glog"
 	"github.com/zmb3/spotify"
 )
 
 //Pause wraps the spotify.Client.Pause() method for easy error checking
-func Pause(conf *Config) {
+func Pause(conf *Config, verboseErrLog bool) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
 	if err := conf.Client.PauseOpt(&opts); err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(verboseErrLog, err)
 	}
 }
 
 //Play wraps the spotify.Client.Play() method for easy error checking
-func Play(conf *Config) {
+func Play(conf *Config, verboseErrLog bool) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
 	if err := conf.Client.PlayOpt(&opts); err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(verboseErrLog, err)
 	}
 }

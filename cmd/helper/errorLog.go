@@ -13,24 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package cmd
+package helper
 
 import (
-	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/spf13/cobra"
+	"fmt"
+	"os"
+
+	"github.com/golang/glog"
 )
 
-// pauseCmd represents the pause command
-var pauseCmd = &cobra.Command{
-	Use:   "pause",
-	Short: "Stop Spotify playback",
-	Long:  `Will stop Spotify playback on the device most recently playing music.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf, verboseErrLog)
-		helper.Pause(&conf, verboseErrLog)
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(pauseCmd)
+// Log error depending on verbosity and exit
+func LogErrorAndExit(verbose bool, args ...interface{}) {
+	if verbose {
+		glog.Fatal(args...)
+	} else {
+		fmt.Println(args...)
+		os.Exit(1)
+	}
 }

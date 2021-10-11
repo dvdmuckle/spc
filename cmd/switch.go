@@ -20,7 +20,6 @@ import (
 	"os"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/golang/glog"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -36,7 +35,7 @@ You can clear the set device entry if the device is no longer active.
 This will also switch playback to the device selected if playback is active,
 and can also switch playback to the already configured device.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, verboseErrLog)
 		shouldClear, _ := cmd.Flags().GetBool("clear")
 		shouldSwitch, _ := cmd.Flags().GetBool("transfer-only")
 		shouldPrint, _ := cmd.Flags().GetBool("print")
@@ -44,6 +43,7 @@ and can also switch playback to the already configured device.`,
 		shouldPlay, _ := cmd.Flags().GetBool("play")
 		deviceToSet, _ := cmd.Flags().GetString("set")
 		justSwitch, _ := cmd.Flags().GetBool("config")
+
 		switch {
 		case shouldPrint:
 			getDevices(&conf)
@@ -67,7 +67,7 @@ and can also switch playback to the already configured device.`,
 			transferPlayback(&conf, shouldPlay)
 		}
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+			helper.LogErrorAndExit(verboseErrLog, "Error writing config:", err)
 		}
 		fmt.Println("Switched to", conf.DeviceID.String())
 
@@ -87,7 +87,7 @@ func init() {
 
 func transferPlayback(conf *helper.Config, shouldPlay bool) {
 	if err := conf.Client.TransferPlayback(conf.DeviceID, shouldPlay); err != nil {
-		glog.Fatal(err)
+		helper.LogErrorAndExit(verboseErrLog, err)
 	}
 }
 
@@ -99,7 +99,7 @@ func clearDeviceEntry(conf *helper.Config) {
 func getDeviceList(conf *helper.Config) []spotify.PlayerDevice {
 	devices, err := conf.Client.PlayerDevices()
 	if err != nil {
-		glog.Fatal(err)
+		helper.LogErrorAndExit(verboseErrLog, err)
 	}
 	if len(devices) == 0 {
 		fmt.Println("No devices found")
@@ -151,7 +151,7 @@ func fuzzySwitchDevice(conf *helper.Config) spotify.ID {
 			fmt.Println("Aborted switch")
 			os.Exit(0)
 		}
-		glog.Fatal(err)
+		helper.LogErrorAndExit(verboseErrLog, err)
 	}
 	return devices[idx].ID
 }

@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/golang/glog"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"
@@ -46,17 +45,15 @@ If a track is queried for, additional similar songs will be queued up.
 More advanced options are availble for the search query. For this,
 please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, verboseErrLog)
 		var searchType string
 		if len(args) < 2 {
-			fmt.Println("Please search for a track, album, playlist, or artist")
-			os.Exit(1)
+			helper.LogErrorAndExit(false, "Please search for a track, album, playlist, or artist")
 		}
 		if args[0] == "track" || args[0] == "album" || args[0] == "playlist" || args[0] == "artist" {
 			searchType = args[0]
 		} else {
-			fmt.Println("Please search for a track, album, playlist, or artist")
-			os.Exit(1)
+			helper.LogErrorAndExit(false, "Please search for a track, album, playlist, or artist")
 		}
 		searchTerm := strings.Join(args[1:], " ")
 		var searchResults *spotify.SearchResult
@@ -72,7 +69,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeArtist)
 		}
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(verboseErrLog, err)
 		}
 		toPlay := fuzzySearchResults(*searchResults, searchType)
 		var opts spotify.PlayOptions
@@ -85,7 +82,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			seeds := spotify.Seeds{Tracks: []spotify.ID{trackID}}
 			recommends, err := conf.Client.GetRecommendations(seeds, nil, nil)
 			if err != nil {
-				glog.Fatal(err)
+				helper.LogErrorAndExit(verboseErrLog, err)
 			}
 			var recommendURIs []spotify.URI
 			for _, track := range recommends.Tracks {
@@ -99,10 +96,10 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		//If a user tries to play a track with shuffle on,
 		//they'll instead get the related tracks first
 		if err := conf.Client.ShuffleOpt(false, &opts); err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(verboseErrLog, err)
 		}
 		if err := conf.Client.PlayOpt(&opts); err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(verboseErrLog, err)
 		}
 	},
 	ValidArgs: []string{"track", "album", "playlist", "artist"},
@@ -147,7 +144,7 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 			fmt.Println("Aborted search")
 			os.Exit(0)
 		}
-		glog.Fatal(err)
+		helper.LogErrorAndExit(verboseErrLog, err)
 	}
 	switch searchType {
 	case "track":

@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
@@ -34,20 +32,17 @@ var volumeCmd = &cobra.Command{
 	Long: `Sets the volume for Spotify. This command requires exactly
 one argument, a number between 0 and 100 to set the volume to.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, verboseErrLog)
 		vol, err := strconv.ParseInt(args[0], 10, 0)
 		if err != nil {
-			fmt.Println("Volume is not a number")
-			os.Exit(1)
+			helper.LogErrorAndExit(false, "Volume is not a number")
 		}
 		if vol > 100 {
-			fmt.Println("Volume cannot be higher than 100")
-			os.Exit(1)
+			helper.LogErrorAndExit(false, "Volume cannot be higher than 100")
 		} else if vol < 0 {
 			//By virtue of how cobra processes args, where "-" denotes a flag, we should never get here
 			//Still, just in case...
-			fmt.Println("Volume cannot be less than 0")
-			os.Exit(1)
+			helper.LogErrorAndExit(false, "Volume cannot be less than 0")
 		}
 		conf.Client.VolumeOpt(int(vol), &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 	},

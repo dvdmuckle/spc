@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"
 )
@@ -33,7 +32,7 @@ var saveWeeklyCmd = &cobra.Command{
 Note this cannot bring back old Spotify Discover Weekly playlists, it can
 only save the current playlist`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf)
+		helper.SetClient(&conf, verboseErrLog)
 		playlistName, _ := cmd.Flags().GetString("name")
 		playlistDescription := "Spotify Discover Weekly for " + getPlaylistDate()
 		if playlistName == "" {
@@ -42,7 +41,7 @@ only save the current playlist`,
 		isPublic, _ := cmd.Flags().GetBool("public")
 		currentUser, err := conf.Client.CurrentUser()
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(verboseErrLog, err)
 		}
 		if deduplicatePlaylist(playlistName, currentUser.User.ID) {
 			fmt.Println("Discover Weekly already saved")
@@ -50,11 +49,11 @@ only save the current playlist`,
 		}
 		newPlaylist, err := conf.Client.CreatePlaylistForUser(currentUser.User.ID, playlistName, playlistDescription, isPublic)
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(verboseErrLog, err)
 		}
 		searchResult, err := conf.Client.Search("Discover Weekly", spotify.SearchTypePlaylist)
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(verboseErrLog, err)
 		}
 		var discoverPlaylist spotify.ID
 		for _, playlist := range searchResult.Playlists.Playlists {
@@ -66,7 +65,7 @@ only save the current playlist`,
 		discoverPlaylistTracks := func() spotify.PlaylistTrackPage {
 			playlistTracks, err := conf.Client.GetPlaylistTracks(discoverPlaylist)
 			if err != nil {
-				glog.Fatal(err)
+				helper.LogErrorAndExit(verboseErrLog, err)
 			}
 			return *playlistTracks
 		}
@@ -89,7 +88,7 @@ func getPlaylistDate() string {
 func deduplicatePlaylist(playlistName string, user string) bool {
 	searchResults, err := conf.Client.Search(playlistName, spotify.SearchTypePlaylist)
 	if err != nil {
-		glog.Fatal(err)
+		helper.LogErrorAndExit(verboseErrLog, err)
 	}
 	for _, playlist := range searchResults.Playlists.Playlists {
 		if playlist.Owner.ID == user && playlist.Name == playlistName {
