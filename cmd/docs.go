@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
@@ -34,29 +35,31 @@ kind of documentation to generate, either man or markdown. The second is the pat
 generated docs. If the path does not exist, it will be created.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 || args[0] != "man" && args[0] != "markdown" {
-			helper.LogErrorAndExit(false, "Please supply a doc type, either man or markdown")
+			fmt.Println("Please supply a doc type, either man or markdown")
+			os.Exit(1)
 		}
 		if len(args) != 2 {
-			helper.LogErrorAndExit(false, "Only two args are valid, the doc type and the path")
+			fmt.Println("Only two args are valid, the doc type and the path")
+			os.Exit(1)
 		}
 		if err := os.MkdirAll(args[1], 0755); err != nil {
-			helper.LogErrorAndExit(verboseErrLog, "Error creating docs path: ", err)
+			helper.LogErrorAndExit("Error creating docs path: ", err)
 		}
 		if genTag, err := cmd.Flags().GetBool("gen-tags"); genTag && err == nil {
 			rootCmd.DisableAutoGenTag = false
 		} else if err != nil {
-			helper.LogErrorAndExit(verboseErrLog, err)
+			helper.LogErrorAndExit(err)
 		}
 		if args[0] == "man" {
 			err := doc.GenManTree(rootCmd, nil, args[1])
 			if err != nil {
-				helper.LogErrorAndExit(verboseErrLog, err)
+				helper.LogErrorAndExit(err)
 			}
 
 		} else if args[0] == "markdown" {
 			err := doc.GenMarkdownTree(rootCmd, args[1])
 			if err != nil {
-				helper.LogErrorAndExit(verboseErrLog, err)
+				helper.LogErrorAndExit(err)
 			}
 		}
 	},

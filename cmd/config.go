@@ -29,7 +29,7 @@ The config file will then have to be manually adjusted to add the
 Spotify ClientID and the Spotify Client Secret as noted in the 
 config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.CreateConfig(cfgFile, verboseErrLog)
+		helper.CreateConfig(cfgFile)
 	},
 }
 

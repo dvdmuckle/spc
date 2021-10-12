@@ -20,19 +20,19 @@ import (
 )
 
 //Pause wraps the spotify.Client.Pause() method for easy error checking
-func Pause(conf *Config, verboseErrLog bool) {
+func Pause(conf *Config) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
 	if err := conf.Client.PauseOpt(&opts); err != nil {
-		LogErrorAndExit(verboseErrLog, err)
+		LogErrorAndExit(err)
 	}
 }
 
 //Play wraps the spotify.Client.Play() method for easy error checking
-func Play(conf *Config, verboseErrLog bool) {
+func Play(conf *Config) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
 	if err := conf.Client.PlayOpt(&opts); err != nil {
-		LogErrorAndExit(verboseErrLog, err)
+		LogErrorAndExit(err)
 	}
 }

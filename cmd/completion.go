@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +38,8 @@ powershell
 For fish, the flag --fish-description can be toggled to includes descriptions in the autocomplete`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 1 {
-			helper.LogErrorAndExit(false, "Please provide a shell for which to generate autocompletion")
+			fmt.Println("Please provide a shell for which to generate autocompletion")
+			os.Exit(1)
 		} else if len(args) < 1 {
 			fmt.Println("Please provide only one shell for which to generate autocompletion")
 		}

@@ -26,8 +26,8 @@ var pauseCmd = &cobra.Command{
 	Short: "Stop Spotify playback",
 	Long:  `Will stop Spotify playback on the device most recently playing music.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf, verboseErrLog)
-		helper.Pause(&conf, verboseErrLog)
+		helper.SetClient(&conf)
+		helper.Pause(&conf)
 	},
 }
 

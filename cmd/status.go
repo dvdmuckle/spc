@@ -51,10 +51,10 @@ If there is no currently playing song on Spotify, regardless of format argument
 the command will return an empty string. This may happen if Spotify is paused
 for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf, verboseErrLog)
+		helper.SetClient(&conf)
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
-			helper.LogErrorAndExit(verboseErrLog, err)
+			helper.LogErrorAndExit(err)
 		}
 
 		statusFmt, _ := cmd.Flags().GetString("format")

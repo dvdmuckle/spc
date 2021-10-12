@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -33,7 +34,7 @@ var seekCmd = &cobra.Command{
 exactly one argument, either a number between 0 and the length of the song in seconds, or a timestamp in
 the form of minutes:seconds.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.SetClient(&conf, verboseErrLog)
+		helper.SetClient(&conf)
 		var position int
 		if strings.Contains(args[0], ":") {
 			var (
@@ -42,36 +43,39 @@ the form of minutes:seconds.`,
 			)
 			_, err := fmt.Sscanf(args[0], "%d:%d", &minutes, &seconds)
 			if err != nil {
-				helper.LogErrorAndExit(false, "Timestamp must be numbers in the form of minutes:seconds")
+				fmt.Println("Timestamp must be numbers in the form of minutes:seconds")
+				os.Exit(1)
 			}
 			position = minutes*60 + seconds
 		} else {
 			var err error
 			position, err = strconv.Atoi(args[0])
 			if err != nil {
-				helper.LogErrorAndExit(false, "Passed value for seconds must be an integer.")
+				fmt.Println("Passed value for seconds must be an integer.")
+				os.Exit(1)
 			}
 		}
 
 		currentlyPlaying, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
-			helper.LogErrorAndExit(verboseErrLog, err)
+			helper.LogErrorAndExit(err)
 		}
 
 		if currentlyPlaying.Item == nil {
-			helper.LogErrorAndExit(false, "Could not obtain the currently playing song.")
+			fmt.Println("Could not obtain the currently playing song.")
+			os.Exit(1)
 		}
 
 		duration := currentlyPlaying.Item.Duration / 1000
 		if position > duration {
-			helper.LogErrorAndExit(false,
-				"The seek position must be at or under the duration of the currently playing song (%d seconds, or %d:%d).\n",
+			fmt.Println("The seek position must be at or under the duration of the currently playing song (%d seconds, or %d:%d).\n",
 				duration, duration/60, duration%60)
+			os.Exit(1)
 		}
 
 		err = conf.Client.SeekOpt(position*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 		if err != nil {
-			helper.LogErrorAndExit(verboseErrLog, err)
+			helper.LogErrorAndExit(err)
 		}
 	},
 }

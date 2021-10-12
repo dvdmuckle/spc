@@ -22,9 +22,14 @@ import (
 	"github.com/golang/glog"
 )
 
-// Log error depending on verbosity and exit
-func LogErrorAndExit(verbose bool, args ...interface{}) {
-	if verbose {
+var verboseErrLog bool
+
+func GetVerboseErrLogAddr() *bool {
+	return &verboseErrLog
+}
+
+func LogErrorAndExit(args ...interface{}) {
+	if verboseErrLog {
 		glog.Fatal(args...)
 	} else {
 		fmt.Println(args...)

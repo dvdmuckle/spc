@@ -18,6 +18,7 @@ package cmd
 import (
 	"encoding/base64"
 	"flag"
+	"fmt"
 	"os"
 	"strings"
 
@@ -34,8 +35,6 @@ import (
 var conf helper.Config
 
 var cfgFile string
-
-var verboseErrLog bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -57,14 +56,15 @@ scope, and is best when paired with another more complicated tool.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		helper.LogErrorAndExit(false, err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/spc/config.yaml)")
-	rootCmd.PersistentFlags().BoolVarP(&verboseErrLog, "verbose", "v", false, "verbose error logging")
+	rootCmd.PersistentFlags().BoolVarP(helper.GetVerboseErrLogAddr(), "verbose", "v", false, "verbose error logging")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -79,13 +79,13 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if _, err := os.Stat(cfgFile); err == nil {
 		if err := viper.ReadInConfig(); err != nil {
-			helper.LogErrorAndExit(verboseErrLog, "Error reading config file: ", err)
+			helper.LogErrorAndExit("Error reading config file: ", err)
 		}
 	}
 	viper.AutomaticEnv() // read in environment variables that match
 	conf.ClientID = viper.GetString("spotifyclientid")
 	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
-		helper.LogErrorAndExit(verboseErrLog, "Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
+		helper.LogErrorAndExit("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}

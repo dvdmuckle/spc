@@ -24,11 +24,12 @@ import (
 )
 
 //CreateConfig initializes a skeleton config
-func CreateConfig(cfgFile string, verboseErrLog bool) {
+func CreateConfig(cfgFile string) {
 	// Find home directory.
 	home, err := homedir.Dir()
 	if err != nil {
-		LogErrorAndExit(false, err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 	configPath := home + "/.config/spc"
 	viper.SetConfigType("yaml")
@@ -36,7 +37,7 @@ func CreateConfig(cfgFile string, verboseErrLog bool) {
 	viper.SetConfigName("config")
 	if cfgFile != "" {
 		if err := os.MkdirAll(configPath, 0755); err != nil {
-			LogErrorAndExit(verboseErrLog, "Error creating config path: ", err)
+			LogErrorAndExit("Error creating config path: ", err)
 		}
 		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
 	}
@@ -44,7 +45,7 @@ func CreateConfig(cfgFile string, verboseErrLog bool) {
 	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
 	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			LogErrorAndExit(verboseErrLog, "Error writing config file:", err)
+			LogErrorAndExit("Error writing config file:", err)
 		}
 		fmt.Printf("Config file created at ~/.config/spc/config.yaml\n")
 	}
@@ -55,7 +56,8 @@ func CreateConfig(cfgFile string, verboseErrLog bool) {
 func SetupConfig() string {
 	home, err := homedir.Dir()
 	if err != nil {
-		LogErrorAndExit(false, err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 	configPath := home + "/.config/spc"
 	viper.SetConfigType("yaml")
