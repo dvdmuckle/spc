@@ -19,10 +19,7 @@ import (
 	"encoding/base64"
 	"flag"
 	"os"
-	"reflect"
 	"strings"
-
-	goflag "flag"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/zmb3/spotify"
@@ -64,51 +61,10 @@ func Execute() {
 	}
 }
 
-type flagValueWrapper struct {
-	inner    goflag.Value
-	flagType string
-}
-
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/spc/config.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verboseErrLog, "verbose", "v", false, "verbose error logging")
-	//fmt.Println(flag.CommandLine.Lookup("v").Value)
-	//fmt.Println(flag.CommandLine.Lookup("logtostderr").Value)
-	flag.CommandLine.Lookup("v")
-	//rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
-	vFlag := flag.CommandLine.Lookup("v")
-
-	//fmt.Println(vFlag.Value)
-	pv := &flagValueWrapper{
-		inner: vFlag.Value,
-	}
-	//fmt.Println(pv.flagType)
-	t := reflect.TypeOf(vFlag.Value)
-	if t.Kind() == reflect.Interface || t.Kind() == reflect.Ptr {
-		t = t.Elem()
-	}
-	//fmt.Println(t)
-	//fmt.Println(t.Name())
-	pv.flagType = strings.TrimSuffix(t.Name(), "Value")
-
-	//fmt.Println(pv.flagType)
-	//fmt.Println(rootCmd.PersistentFlags().Lookup("logtostderr").Value.Type())
-	//fmt.Println(rootCmd.PersistentFlags().Lookup("v").Value.Type())
-	//vFlag := rootCmd.PersistentFlags().Lookup("v")
-	//vFlagString := vFlag.Value.String()
-	//vFlagSet := vFlag.Value.Set()
-	//vFlag.Value = pflag.Value{vFlagString, false, "count"}
-	//fmt.Println(flag.CommandLine.Lookup("v"))
-	//fmt.Println(rootCmd.PersistentFlags().Lookup("config"))
-
-	//verbose = flag.CommandLine.Lookup("v").Value
-	//fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
-	//flag.PrintDefaults()
-	//fmt.Println(flag.CommandLine.Lookup("v"))
-	//fmt.Println(rootCmd.Flag("v"))
-	//fmt.Println(rootCmd.Flag("config"))
-
 }
 
 // initConfig reads in config file and ENV variables if set.
