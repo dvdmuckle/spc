@@ -68,7 +68,8 @@ the form of minutes:seconds.`,
 
 		duration := currentlyPlaying.Item.Duration / 1000
 		if position > duration {
-			fmt.Println("The seek position must be at or under the duration of the currently playing song (%d seconds, or %d:%d).\n",
+			fmt.Printf(
+				"The seek position must be at or under the duration of the currently playing song (%d seconds, or %d:%d).\n",
 				duration, duration/60, duration%60)
 			os.Exit(1)
 		}

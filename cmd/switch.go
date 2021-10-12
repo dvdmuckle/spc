@@ -43,7 +43,6 @@ and can also switch playback to the already configured device.`,
 		shouldPlay, _ := cmd.Flags().GetBool("play")
 		deviceToSet, _ := cmd.Flags().GetString("set")
 		justSwitch, _ := cmd.Flags().GetBool("config")
-
 		switch {
 		case shouldPrint:
 			getDevices(&conf)
