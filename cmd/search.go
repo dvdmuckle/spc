@@ -77,6 +77,9 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		toPlay := fuzzySearchResults(*searchResults, searchType)
 		var opts spotify.PlayOptions
 		opts.DeviceID = &conf.DeviceID
+
+		var recommendedIDs []spotify.ID
+
 		switch searchType {
 		case "track":
 			//This lines up some songs to play after the search result plays
@@ -87,12 +90,10 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			if err != nil {
 				glog.Fatal(err)
 			}
-			var recommendURIs []spotify.URI
 			for _, track := range recommends.Tracks {
-				recommendURIs = append(recommendURIs, track.URI)
+				recommendedIDs = append(recommendedIDs, track.ID)
 			}
 			opts.URIs = append(opts.URIs, toPlay)
-			opts.URIs = append(opts.URIs, recommendURIs...)
 		case "album", "playlist", "artist":
 			opts.PlaybackContext = &toPlay
 		}
@@ -103,6 +104,11 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		}
 		if err := conf.Client.PlayOpt(&opts); err != nil {
 			glog.Fatal(err)
+		}
+		for _, val := range recommendedIDs {
+			if err := conf.Client.QueueSongOpt(val, &opts); err != nil {
+				glog.Fatal(err)
+			}
 		}
 	},
 	ValidArgs: []string{"track", "album", "playlist", "artist"},
