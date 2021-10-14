@@ -78,7 +78,6 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		var opts spotify.PlayOptions
 		opts.DeviceID = &conf.DeviceID
 
-		var recommendedIDs []spotify.ID
 
 		switch searchType {
 		case "track":
@@ -90,8 +89,10 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			if err != nil {
 				glog.Fatal(err)
 			}
-			for _, track := range recommends.Tracks {
-				recommendedIDs = append(recommendedIDs, track.ID)
+			for _, val := range recommends.Tracks {
+				if err := conf.Client.QueueSongOpt(val.ID, &opts); err != nil {
+					glog.Fatal(err)
+				}
 			}
 			opts.URIs = append(opts.URIs, toPlay)
 		case "album", "playlist", "artist":
@@ -104,11 +105,6 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		}
 		if err := conf.Client.PlayOpt(&opts); err != nil {
 			glog.Fatal(err)
-		}
-		for _, val := range recommendedIDs {
-			if err := conf.Client.QueueSongOpt(val, &opts); err != nil {
-				glog.Fatal(err)
-			}
 		}
 	},
 	ValidArgs: []string{"track", "album", "playlist", "artist"},
