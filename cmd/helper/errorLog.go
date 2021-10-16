@@ -18,6 +18,7 @@ package helper
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/golang/glog"
 )
@@ -32,7 +33,9 @@ func LogErrorAndExit(args ...interface{}) {
 	if verboseErrLog {
 		glog.Fatal(args...)
 	} else {
-		fmt.Println(args...)
+		logArgs := []interface{}{"Error: "}
+		logArgs = append(logArgs, args...)
+		fmt.Println(strings.Trim(fmt.Sprint(logArgs...), "[]"))
 		os.Exit(1)
 	}
 }
