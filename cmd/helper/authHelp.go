@@ -18,13 +18,15 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"os/user"
+	"strings"
 	"time"
 
 	"github.com/golang/glog"
-	spotifyAuth "github.com/markbates/goth/providers/spotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zalando/go-keyring"
@@ -119,12 +121,30 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 //RefreshToken refreshes the auth token from Spotify
 //TODO: #4 Replace implementation with vanilla oauth2 use
 func RefreshToken(client string, secret string, refreshToken string) *oauth2.Token {
-	provider := spotifyAuth.New(client, secret, redirectURI)
-	if refreshToken != "" && provider.RefreshTokenAvailable() {
-		token, err := provider.RefreshToken(refreshToken)
+	var token *oauth2.Token = &oauth2.Token{}
+
+	if refreshToken != "" {
+		const grantType string = "refresh_token"
+		const tokenURL string = "https://accounts.spotify.com/api/token"
+		const contentType string = "application/x-www-form-urlencoded"
+		form := url.Values{}
+		form.Add("grant_type", grantType)
+		form.Add("refresh_token", refreshToken)
+		form.Add("client_id", client)
+		form.Add("client_secret", secret)
+
+		resp, err := http.Post(tokenURL, contentType, strings.NewReader(form.Encode()))
 		if err != nil {
-			glog.Fatal(err)
+			glog.Fatal("Error while refreshing accesstoken")
+			return nil
 		}
+		body, err := ioutil.ReadAll(resp.Body)
+		defer resp.Body.Close()
+		if err != nil {
+			glog.Fatal("Error while reading the response body")
+			return nil
+		}
+		json.Unmarshal(body, token)
 		return token
 	}
 	glog.Fatal("Cannot refresh token, token is empty")
