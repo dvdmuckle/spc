@@ -135,12 +135,14 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 
 		resp, err := http.Post(tokenURL, contentType, strings.NewReader(form.Encode()))
 		if err != nil {
+			glog.Fatal(err)
 			glog.Fatal("Error while refreshing accesstoken")
 			return nil
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
 		if err != nil {
+			glog.Fatal(err)
 			glog.Fatal("Error while reading the response body")
 			return nil
 		}
