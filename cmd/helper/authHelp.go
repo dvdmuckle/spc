@@ -118,13 +118,12 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 }
 
 //RefreshToken refreshes the auth token from Spotify
-//TODO: #4 Replace implementation with vanilla oauth2 use
 func RefreshToken(client string, secret string, refreshToken string) *oauth2.Token {
 	var token *oauth2.Token = &oauth2.Token{}
 
 	if refreshToken != "" {
 		const grantType string = "refresh_token"
-		const tokenURL string = "https://accounts.spotify.com/api/token"
+		const tokenURL string = spotify.TokenURL
 		const contentType string = "application/x-www-form-urlencoded"
 		form := url.Values{}
 		form.Add("grant_type", grantType)
@@ -135,8 +134,6 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 		resp, err := http.Post(tokenURL, contentType, strings.NewReader(form.Encode()))
 		if err != nil {
 			LogErrorAndExit(err)
-			LogErrorAndExit("Error while refreshing accesstoken")
-			return nil
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
