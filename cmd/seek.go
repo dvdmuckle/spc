@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"
 )
@@ -59,7 +58,7 @@ the form of minutes:seconds.`,
 
 		currentlyPlaying, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(err)
 		}
 
 		if currentlyPlaying.Item == nil {
@@ -77,7 +76,7 @@ the form of minutes:seconds.`,
 
 		err = conf.Client.SeekOpt(position*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(err)
 		}
 	},
 }

@@ -26,7 +26,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zalando/go-keyring"
@@ -48,11 +47,11 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	tok, err := authenticator.Token(state, r)
 	if err != nil {
 		http.Error(w, "Couldn't get token", http.StatusForbidden)
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if st := r.FormValue("state"); st != state {
 		http.NotFound(w, r)
-		glog.Fatalf("State mismatch: %s != %s\n", st, state)
+		LogErrorAndExit(fmt.Sprintf("State mismatch: %s != %s\n", st, state))
 	}
 	// use the token to get an authenticated client
 	client := authenticator.NewClient(tok)
@@ -66,7 +65,7 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 	secret = conf.Secret
 	curUser, err := user.Current()
 	if err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if clientID == "" || secret == "" {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/spc/config.yaml")
@@ -75,7 +74,7 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 
 	shouldRefresh, err := cmd.Flags().GetBool("refresh")
 	if err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if len(viper.GetString("auth")) != 0 && shouldRefresh {
 		fmt.Println("Refreshing token...")
@@ -83,10 +82,10 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 		conf.Token = *newToken
 		marshalToken, err := json.Marshal(conf.Token)
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
-			glog.Fatal("Error saving token to keyring", err)
+			LogErrorAndExit("Error saving token to keyring", err)
 		}
 	} else {
 		fmt.Println("Getting token...")
@@ -100,19 +99,19 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 
 		user, err := client.CurrentUser()
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		token, err := client.Token()
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		conf.Token = *token
 		marshalToken, err := json.Marshal(conf.Token)
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
-			glog.Fatal("Error saving token to keyring", err)
+			LogErrorAndExit("Error saving token to keyring", err)
 		}
 		fmt.Println("Login successful as", user.ID)
 	}
@@ -135,21 +134,19 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 
 		resp, err := http.Post(tokenURL, contentType, strings.NewReader(form.Encode()))
 		if err != nil {
-			glog.Fatal(err)
-			glog.Fatal("Error while refreshing accesstoken")
+			LogErrorAndExit(err)
+			LogErrorAndExit("Error while refreshing accesstoken")
 			return nil
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
 		if err != nil {
-			glog.Fatal(err)
-			glog.Fatal("Error while reading the response body")
-			return nil
+			LogErrorAndExit(err)
 		}
 		json.Unmarshal(body, token)
 		return token
 	}
-	glog.Fatal("Cannot refresh token, token is empty")
+	LogErrorAndExit("Cannot refresh token, token is empty")
 	return nil
 }
 
@@ -158,11 +155,11 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 func SetClient(conf *Config) {
 	curUser, err := user.Current()
 	if err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" {
 		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 	} else {
 		fmt.Println("Please run spc auth first to login")
@@ -177,14 +174,14 @@ func SetClient(conf *Config) {
 		conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
 		marshalToken, err := json.Marshal(conf.Token)
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		curUser, err := user.Current()
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
-			glog.Fatal("Error saving token to keyring", err)
+			LogErrorAndExit("Error saving token to keyring", err)
 		}
 	}
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
