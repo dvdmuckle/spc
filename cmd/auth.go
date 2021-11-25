@@ -18,7 +18,6 @@ package cmd
 import (
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // authCmd represents the auth command
@@ -28,7 +27,7 @@ var authCmd = &cobra.Command{
 	Long: `Authenticates with Spotify by printout out a login link, which will then save your access token to the config file.
 Use this command after the initial login to refresh your access token`,
 	Run: func(cmd *cobra.Command, args []string) {
-		helper.Auth(cmd, viper.GetViper(), cfgFile, &conf)
+		helper.Auth(cmd, cfgFile, &conf)
 	},
 }
 
