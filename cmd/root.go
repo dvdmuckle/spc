@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
+	"github.com/golang/glog"
 	"github.com/zmb3/spotify"
 
 	"github.com/spf13/cobra"
@@ -64,7 +65,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.config/spc/config.yaml)")
-	rootCmd.PersistentFlags().BoolVarP(helper.GetVerboseErrLogAddr(), "verbose", "v", false, "verbose error logging")
+	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -79,13 +80,13 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if _, err := os.Stat(cfgFile); err == nil {
 		if err := viper.ReadInConfig(); err != nil {
-			helper.LogErrorAndExit("Error reading config file: ", err)
+			glog.Fatal("Error reading config file: ", err)
 		}
 	}
 	viper.AutomaticEnv() // read in environment variables that match
 	conf.ClientID = viper.GetString("spotifyclientid")
 	if secret, err := base64.StdEncoding.DecodeString(viper.GetString("spotifysecret")); err != nil && len(secret) != 0 {
-		helper.LogErrorAndExit("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
+		glog.Fatal("Error decoding Spotify Client Secret, is it valid and base64 encoded? Error: ", err)
 	} else {
 		conf.Secret = strings.TrimSpace(string(secret))
 	}

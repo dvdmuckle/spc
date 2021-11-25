@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
+	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"
 )
@@ -54,7 +55,7 @@ for an extended period of time`,
 		helper.SetClient(&conf)
 		status, err := conf.Client.PlayerCurrentlyPlaying()
 		if err != nil {
-			helper.LogErrorAndExit(err)
+			glog.Fatal(err)
 		}
 
 		statusFmt, _ := cmd.Flags().GetString("format")

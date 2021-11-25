@@ -1,12 +1,4 @@
-spc (1.1.0-1) focal; urgency=medium
-
-  * Allow for passing in log level
-  * Refresh token tweaks and fix
-  * Dependency updates
-
- -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Thu, 25 Nov 2021 16:17:29 -0500
-
-spc (1.0.0-1) focal; urgency=medium
+spc (1.0.0-2) focal; urgency=medium
 
   * Save token to keyring
   * Error on no path supplied to docs command

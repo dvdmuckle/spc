@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dvdmuckle/spc/cmd/helper"
+	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 )
@@ -43,23 +43,23 @@ generated docs. If the path does not exist, it will be created.`,
 			os.Exit(1)
 		}
 		if err := os.MkdirAll(args[1], 0755); err != nil {
-			helper.LogErrorAndExit("Error creating docs path: ", err)
+			glog.Fatal("Error creating docs path: ", err)
 		}
 		if genTag, err := cmd.Flags().GetBool("gen-tags"); genTag && err == nil {
 			rootCmd.DisableAutoGenTag = false
 		} else if err != nil {
-			helper.LogErrorAndExit(err)
+			glog.Fatal(err)
 		}
 		if args[0] == "man" {
 			err := doc.GenManTree(rootCmd, nil, args[1])
 			if err != nil {
-				helper.LogErrorAndExit(err)
+				glog.Fatal(err)
 			}
 
 		} else if args[0] == "markdown" {
 			err := doc.GenMarkdownTree(rootCmd, args[1])
 			if err != nil {
-				helper.LogErrorAndExit(err)
+				glog.Fatal(err)
 			}
 		}
 	},

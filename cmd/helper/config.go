@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/golang/glog"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
@@ -37,7 +38,7 @@ func CreateConfig(cfgFile string) {
 	viper.SetConfigName("config")
 	if cfgFile != "" {
 		if err := os.MkdirAll(configPath, 0755); err != nil {
-			LogErrorAndExit("Error creating config path: ", err)
+			glog.Fatal("Error creating config path: ", err)
 		}
 		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
 	}
@@ -45,7 +46,7 @@ func CreateConfig(cfgFile string) {
 	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
 	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			LogErrorAndExit("Error writing config file:", err)
+			glog.Fatal("Error writing config file:", err)
 		}
 		fmt.Printf("Config file created at ~/.config/spc/config.yaml\n")
 	}
