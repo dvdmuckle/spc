@@ -18,15 +18,15 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"os/user"
+	"strings"
 	"time"
 
-	"github.com/golang/glog"
-	spotifyAuth "github.com/markbates/goth/providers/spotify"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
@@ -46,11 +46,11 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	tok, err := authenticator.Token(state, r)
 	if err != nil {
 		http.Error(w, "Couldn't get token", http.StatusForbidden)
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if st := r.FormValue("state"); st != state {
 		http.NotFound(w, r)
-		glog.Fatalf("State mismatch: %s != %s\n", st, state)
+		LogErrorAndExit(fmt.Sprintf("State mismatch: %s != %s\n", st, state))
 	}
 	// use the token to get an authenticated client
 	client := authenticator.NewClient(tok)
@@ -59,12 +59,12 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 //Auth authenticates with Spotify and refreshes the token
-func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) {
+func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 	clientID = conf.ClientID
 	secret = conf.Secret
 	curUser, err := user.Current()
 	if err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if clientID == "" || secret == "" {
 		fmt.Println("Please configure your Spotify client ID and secret in the config file at ~/.config/spc/config.yaml")
@@ -73,18 +73,21 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 
 	shouldRefresh, err := cmd.Flags().GetBool("refresh")
 	if err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
-	if len(viper.GetString("auth")) != 0 && shouldRefresh {
+	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" && shouldRefresh {
 		fmt.Println("Refreshing token...")
+		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
+			LogErrorAndExit(err)
+		}
 		newToken := RefreshToken(clientID, secret, conf.Token.RefreshToken)
 		conf.Token = *newToken
 		marshalToken, err := json.Marshal(conf.Token)
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
-			glog.Fatal("Error saving token to keyring", err)
+			LogErrorAndExit("Error saving token to keyring", err)
 		}
 	} else {
 		fmt.Println("Getting token...")
@@ -98,36 +101,56 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 
 		user, err := client.CurrentUser()
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		token, err := client.Token()
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		conf.Token = *token
 		marshalToken, err := json.Marshal(conf.Token)
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
-			glog.Fatal("Error saving token to keyring", err)
+			LogErrorAndExit("Error saving token to keyring", err)
 		}
 		fmt.Println("Login successful as", user.ID)
 	}
 }
 
 //RefreshToken refreshes the auth token from Spotify
-//TODO: #4 Replace implementation with vanilla oauth2 use
 func RefreshToken(client string, secret string, refreshToken string) *oauth2.Token {
-	provider := spotifyAuth.New(client, secret, redirectURI)
-	if refreshToken != "" && provider.RefreshTokenAvailable() {
-		token, err := provider.RefreshToken(refreshToken)
+	var token *oauth2.Token = &oauth2.Token{}
+
+	if refreshToken != "" {
+		const grantType string = "refresh_token"
+		const tokenURL string = spotify.TokenURL
+		const contentType string = "application/x-www-form-urlencoded"
+		form := url.Values{}
+		form.Add("grant_type", grantType)
+		form.Add("refresh_token", refreshToken)
+		form.Add("client_id", client)
+		form.Add("client_secret", secret)
+
+		resp, err := http.Post(tokenURL, contentType, strings.NewReader(form.Encode()))
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
+		body, err := ioutil.ReadAll(resp.Body)
+		defer resp.Body.Close()
+		if err != nil {
+			LogErrorAndExit(err)
+		}
+		json.Unmarshal(body, token)
+		//Looks like the normal token refresh from Spotify doesn't also return the refreshToken
+		token.RefreshToken = refreshToken
+		// TODO Don't hardcode the expiry duration
+		token.Expiry = time.Now().Add(time.Second * 3600)
+		fmt.Println(token)
 		return token
 	}
-	glog.Fatal("Cannot refresh token, token is empty")
+	LogErrorAndExit("Cannot refresh token, token is empty")
 	return nil
 }
 
@@ -136,11 +159,11 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 func SetClient(conf *Config) {
 	curUser, err := user.Current()
 	if err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" {
 		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 	} else {
 		fmt.Println("Please run spc auth first to login")
@@ -155,14 +178,14 @@ func SetClient(conf *Config) {
 		conf.Token = *RefreshToken(conf.ClientID, conf.Secret, conf.Token.RefreshToken)
 		marshalToken, err := json.Marshal(conf.Token)
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		curUser, err := user.Current()
 		if err != nil {
-			glog.Fatal(err)
+			LogErrorAndExit(err)
 		}
 		if err := keyring.Set("spc", curUser.Username, string(marshalToken)); err != nil {
-			glog.Fatal("Error saving token to keyring", err)
+			LogErrorAndExit("Error saving token to keyring", err)
 		}
 	}
 	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)

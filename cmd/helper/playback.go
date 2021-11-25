@@ -16,7 +16,6 @@ limitations under the License.
 package helper
 
 import (
-	"github.com/golang/glog"
 	"github.com/zmb3/spotify"
 )
 
@@ -25,7 +24,7 @@ func Pause(conf *Config) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
 	if err := conf.Client.PauseOpt(&opts); err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 }
 
@@ -34,6 +33,6 @@ func Play(conf *Config) {
 	var opts spotify.PlayOptions
 	opts.DeviceID = &conf.DeviceID
 	if err := conf.Client.PlayOpt(&opts); err != nil {
-		glog.Fatal(err)
+		LogErrorAndExit(err)
 	}
 }

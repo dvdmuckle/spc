@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/golang/glog"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify"
@@ -72,7 +71,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeArtist)
 		}
 		if err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(err)
 		}
 		toPlay := fuzzySearchResults(*searchResults, searchType)
 		var opts spotify.PlayOptions
@@ -85,7 +84,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			seeds := spotify.Seeds{Tracks: []spotify.ID{trackID}}
 			recommends, err := conf.Client.GetRecommendations(seeds, nil, nil)
 			if err != nil {
-				glog.Fatal(err)
+				helper.LogErrorAndExit(err)
 			}
 			var recommendURIs []spotify.URI
 			for _, track := range recommends.Tracks {
@@ -99,10 +98,10 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		//If a user tries to play a track with shuffle on,
 		//they'll instead get the related tracks first
 		if err := conf.Client.ShuffleOpt(false, &opts); err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(err)
 		}
 		if err := conf.Client.PlayOpt(&opts); err != nil {
-			glog.Fatal(err)
+			helper.LogErrorAndExit(err)
 		}
 	},
 	ValidArgs: []string{"track", "album", "playlist", "artist"},
@@ -147,7 +146,7 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 			fmt.Println("Aborted search")
 			os.Exit(0)
 		}
-		glog.Fatal(err)
+		helper.LogErrorAndExit(err)
 	}
 	switch searchType {
 	case "track":
