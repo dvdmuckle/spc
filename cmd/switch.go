@@ -20,7 +20,6 @@ import (
 	"os"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/golang/glog"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -67,7 +66,7 @@ and can also switch playback to the already configured device.`,
 			transferPlayback(&conf, shouldPlay)
 		}
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			glog.Fatal("Error writing config:", err)
+			helper.LogErrorAndExit("Error writing config:", err)
 		}
 		fmt.Println("Switched to", conf.DeviceID.String())
 
@@ -87,7 +86,7 @@ func init() {
 
 func transferPlayback(conf *helper.Config, shouldPlay bool) {
 	if err := conf.Client.TransferPlayback(conf.DeviceID, shouldPlay); err != nil {
-		glog.Fatal(err)
+		helper.LogErrorAndExit(err)
 	}
 }
 
@@ -99,7 +98,7 @@ func clearDeviceEntry(conf *helper.Config) {
 func getDeviceList(conf *helper.Config) []spotify.PlayerDevice {
 	devices, err := conf.Client.PlayerDevices()
 	if err != nil {
-		glog.Fatal(err)
+		helper.LogErrorAndExit(err)
 	}
 	if len(devices) == 0 {
 		fmt.Println("No devices found")
@@ -151,7 +150,7 @@ func fuzzySwitchDevice(conf *helper.Config) spotify.ID {
 			fmt.Println("Aborted switch")
 			os.Exit(0)
 		}
-		glog.Fatal(err)
+		helper.LogErrorAndExit(err)
 	}
 	return devices[idx].ID
 }

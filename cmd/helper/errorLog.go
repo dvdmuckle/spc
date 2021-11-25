@@ -13,25 +13,29 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package cmd
+package helper
 
 import (
-	"github.com/dvdmuckle/spc/cmd/helper"
-	"github.com/spf13/cobra"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/golang/glog"
 )
 
-// authCmd represents the auth command
-var authCmd = &cobra.Command{
-	Use:   "auth",
-	Short: "Authenticates with Spotify",
-	Long: `Authenticates with Spotify by printout out a login link, which will then save your access token to the config file.
-Use this command after the initial login to refresh your access token`,
-	Run: func(cmd *cobra.Command, args []string) {
-		helper.Auth(cmd, cfgFile, &conf)
-	},
+var verboseErrLog bool
+
+func GetVerboseErrLogAddr() *bool {
+	return &verboseErrLog
 }
 
-func init() {
-	rootCmd.AddCommand(authCmd)
-	authCmd.Flags().BoolP("refresh", "r", false, "Force refreshing the token")
+func LogErrorAndExit(args ...interface{}) {
+	if verboseErrLog {
+		glog.Fatal(args...)
+	} else {
+		logArgs := []interface{}{"Error: "}
+		logArgs = append(logArgs, args...)
+		fmt.Println(strings.Trim(fmt.Sprint(logArgs...), "[]"))
+		os.Exit(1)
+	}
 }
