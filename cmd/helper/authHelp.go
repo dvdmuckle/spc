@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
@@ -60,7 +59,7 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 //Auth authenticates with Spotify and refreshes the token
-func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) {
+func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 	clientID = conf.ClientID
 	secret = conf.Secret
 	curUser, err := user.Current()
@@ -76,8 +75,11 @@ func Auth(cmd *cobra.Command, viper *viper.Viper, cfgFile string, conf *Config) 
 	if err != nil {
 		LogErrorAndExit(err)
 	}
-	if len(viper.GetString("auth")) != 0 && shouldRefresh {
+	if key, err := keyring.Get("spc", curUser.Username); err == nil && key != "" && shouldRefresh {
 		fmt.Println("Refreshing token...")
+		if err := json.Unmarshal([]byte(key), &conf.Token); err != nil {
+			LogErrorAndExit(err)
+		}
 		newToken := RefreshToken(clientID, secret, conf.Token.RefreshToken)
 		conf.Token = *newToken
 		marshalToken, err := json.Marshal(conf.Token)
@@ -141,6 +143,11 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 			LogErrorAndExit(err)
 		}
 		json.Unmarshal(body, token)
+		//Looks like the normal token refresh from Spotify doesn't also return the refreshToken
+		token.RefreshToken = refreshToken
+		// TODO Don't hardcode the expiry duration
+		token.Expiry = time.Now().Add(time.Second * 3600)
+		fmt.Println(token)
 		return token
 	}
 	LogErrorAndExit("Cannot refresh token, token is empty")
