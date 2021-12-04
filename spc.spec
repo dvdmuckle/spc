@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             1.1.0
+%global tag             1.1.1
 Version:                %{tag}
 %gometa
 
@@ -86,6 +86,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Sat Dec 04 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.1.1-1
+- Remove leftover debug println
+
 * Thu Nov 25 2021 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.1.0-1
 - Allow for passing in log level
 - Refresh token tweaks and fix
