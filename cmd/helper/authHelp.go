@@ -147,7 +147,6 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 		token.RefreshToken = refreshToken
 		// TODO Don't hardcode the expiry duration
 		token.Expiry = time.Now().Add(time.Second * 3600)
-		fmt.Println(token)
 		return token
 	}
 	LogErrorAndExit("Cannot refresh token, token is empty")
