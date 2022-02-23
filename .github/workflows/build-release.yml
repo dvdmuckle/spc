@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: "386"
@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: amd64
@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: "arm"
@@ -49,7 +49,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: arm64
@@ -62,10 +62,23 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: amd64
+        goos: darwin
+        extra_files: "LICENSE"
+        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
+  release-darwin-arm64:
+    name: release darwin/arm64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: compile and release
+      uses: wangyoucao577/go-release-action@v1.24
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goarch: arm64
         goos: darwin
         extra_files: "LICENSE"
         ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
@@ -75,7 +88,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: "386"
@@ -88,7 +101,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.14
+      uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: amd64
