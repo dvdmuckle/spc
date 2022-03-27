@@ -12,7 +12,7 @@ require (
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/zalando/go-keyring v0.2.0
+	github.com/zalando/go-keyring v0.2.1
 	github.com/zmb3/spotify v1.3.0
 	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
