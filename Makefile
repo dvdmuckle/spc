@@ -50,7 +50,7 @@ prepare-deb-build: go-build
 	mkdir -p debbuild
 	mv ../spc_* debbuild/
 deb-bump-version:
-	dch -i -M -D focal
+	dch -i -M -D "focal jammy"
 bump-and-prepare-deb-build: deb-bump-version prepare-deb-build
 rpm-bump-spec:
 	rpmdev-bumpspec -u "David Muckle <dvdmuckle@dvdmuckle.xyz>" spc.spec
