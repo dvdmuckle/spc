@@ -18,6 +18,7 @@ spc switch [flags]
 
 ```
   -c, --clear           Clear the current device entry
+      --config          Switch configured device but do not transfer playback
   -h, --help            help for switch
   -p, --play            Start playback on switch
       --print           Only print the currently configured device
@@ -28,8 +29,7 @@ spc switch [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   Config file (default is $HOME/.config/spc/config.yaml)
-  -v, --verbose         verbose error logging
+  -v, --verbose   verbose error logging
 ```
 
 ### SEE ALSO
