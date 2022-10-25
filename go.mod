@@ -6,7 +6,7 @@ require (
 	github.com/golang/glog v1.0.0
 	github.com/ktr0731/go-fuzzyfinder v0.7.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.13.0
 	github.com/zalando/go-keyring v0.2.1
 	github.com/zmb3/spotify v1.3.0
