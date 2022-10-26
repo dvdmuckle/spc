@@ -1,6 +1,6 @@
 module github.com/dvdmuckle/spc
 
-go 1.16
+go 1.17
 
 require (
 	github.com/golang/glog v1.0.0
@@ -11,5 +11,6 @@ require (
 	github.com/zalando/go-keyring v0.2.1
 	github.com/zmb3/spotify v1.3.0
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
+
+require gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
