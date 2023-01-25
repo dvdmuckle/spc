@@ -1,3 +1,15 @@
+spc (1.1.5-1) jammy; urgency=medium
+
+  * Update dependencies
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Wed, 25 Jan 2023 17:53:42 -0500
+
+spc (1.1.4-2) jammy; urgency=medium
+
+  * Build only for jammy
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Wed, 26 Oct 2022 11:27:58 -0400
+
 spc (1.1.4-1) focal jammy; urgency=medium
 
   * Update dependencies
