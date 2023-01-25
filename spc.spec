@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             1.1.4
+%global tag             1.1.5
 Version:                %{tag}
 %gometa
 
@@ -86,6 +86,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Wed Jan 25 2023 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.1.5-1
+- Update dependencies
+
 * Wed Oct 26 2022 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.1.4-1
 - Update dependencies
 
