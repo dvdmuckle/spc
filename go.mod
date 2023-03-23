@@ -3,7 +3,7 @@ module github.com/dvdmuckle/spc
 go 1.17
 
 require (
-	github.com/golang/glog v1.0.0
+	github.com/golang/glog v1.1.1
 	github.com/ktr0731/go-fuzzyfinder v0.7.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.6.1
