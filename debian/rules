@@ -10,3 +10,6 @@ override_dh_auto_install:
 
 override_dh_auto_build:
 	dh_auto_build -O--buildsystem=golang -- -ldflags "-X github.com/dvdmuckle/spc/cmd.version=$(DEB_UPSTREAM_VERSION)"
+
+override_dh_dwz:
+	@:
