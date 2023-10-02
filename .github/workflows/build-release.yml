@@ -1,110 +1,38 @@
-on: 
+on:
   release:
     types:
       - published
-name: Build Release
+
 jobs:
-  release-linux-386:
-    name: release linux/386
+  build:
+    name: release ${{ matrix.goos }}/${{ matrix.goarch }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: 386
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm
+          - goos: linux
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: 386
+          - goos: windows
+            goarch: amd64
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
       uses: wangyoucao577/go-release-action@v1.24
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: "386"
-        goos: linux
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-linux-amd64:
-    name: release linux/amd64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: amd64
-        goos: linux
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-linux-arm:
-    name: release linux/386
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: "arm"
-        goos: linux
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-linux-arm64:
-    name: release linux/amd64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: arm64
-        goos: linux
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-darwin-amd64:
-    name: release darwin/amd64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: amd64
-        goos: darwin
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-darwin-arm64:
-    name: release darwin/arm64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: arm64
-        goos: darwin
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-windows-386:
-    name: release windows/386
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: "386"
-        goos: windows
-        extra_files: "LICENSE"
-        ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
-  release-windows-amd64:
-    name: release windows/amd64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goarch: amd64
-        goos: windows
+        goarch: ${{ matrix.goarch }}
+        goos: ${{ matrix.goos }}
         extra_files: "LICENSE"
         ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
