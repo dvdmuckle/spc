@@ -1,6 +1,8 @@
 # spc
 
 ![Go](https://github.com/dvdmuckle/spc/workflows/Go/badge.svg?branch=main)
+[![rpmbuild](https://copr.fedorainfracloud.org/coprs/dvdmuckle/spc/package/spc/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/dvdmuckle/spc/package/spc/)
+![Ubuntu](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.launchpad.net%2F1.0%2F~dvdmuckle%2F%2Barchive%2Fspc%3Fws.op%3DgetBuildRecords&query=%24.entries.0.buildstate&logo=ubuntu&label=Build&color=orange&link=https%3A%2F%2Flaunchpad.net%2F~dvdmuckle%2F%2Barchive%2Fubuntu%2Fspc)
 
 A lightweight mutliplatform CLI for Spotify
 
