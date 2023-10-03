@@ -1,6 +1,6 @@
 # spc
 
-![Go](https://github.com/dvdmuckle/spc/workflows/Go/badge.svg?branch=master)
+![Go](https://github.com/dvdmuckle/spc/workflows/Go/badge.svg?branch=main)
 
 A lightweight mutliplatform CLI for Spotify
 
