@@ -3,6 +3,10 @@ on:
     types:
       - published
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     name: release ${{ matrix.goos }}/${{ matrix.goarch }}
@@ -29,7 +33,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.24
+      uses: wangyoucao577/go-release-action@v1.40
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: ${{ matrix.goarch }}
