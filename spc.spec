@@ -38,6 +38,7 @@ BuildRequires:  git
 
 Requires: bash-completion
 Requires: dbus-x11
+Requires: gnome-keyring
 
 %description
 %{common_description}
