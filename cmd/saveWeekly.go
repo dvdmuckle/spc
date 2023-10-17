@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,12 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 // saveWeeklyCmd represents the saveWeekly command
@@ -39,7 +40,10 @@ only save the current playlist`,
 			playlistName = "Discover Weekly " + getPlaylistDate()
 		}
 		isPublic, _ := cmd.Flags().GetBool("public")
-		currentUser, err := conf.Client.CurrentUser()
+		isCollaborative, _ := cmd.Flags().GetBool("collaborative")
+
+		ctx := context.Background()
+		currentUser, err := conf.Client.CurrentUser(ctx)
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
@@ -47,11 +51,11 @@ only save the current playlist`,
 			fmt.Println("Discover Weekly already saved")
 			return
 		}
-		newPlaylist, err := conf.Client.CreatePlaylistForUser(currentUser.User.ID, playlistName, playlistDescription, isPublic)
+		newPlaylist, err := conf.Client.CreatePlaylistForUser(ctx, currentUser.User.ID, playlistName, playlistDescription, isPublic, isCollaborative)
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
-		searchResult, err := conf.Client.Search("Discover Weekly", spotify.SearchTypePlaylist)
+		searchResult, err := conf.Client.Search(ctx, "Discover Weekly", spotify.SearchTypePlaylist)
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
@@ -63,7 +67,7 @@ only save the current playlist`,
 			}
 		}
 		discoverPlaylistTracks := func() spotify.PlaylistTrackPage {
-			playlistTracks, err := conf.Client.GetPlaylistTracks(discoverPlaylist)
+			playlistTracks, err := conf.Client.GetPlaylistTracks(ctx, discoverPlaylist)
 			if err != nil {
 				helper.LogErrorAndExit(err)
 			}
@@ -73,7 +77,7 @@ only save the current playlist`,
 		for _, track := range discoverPlaylistTracks().Tracks {
 			discoverPlaylistTrackIDs = append(discoverPlaylistTrackIDs, track.Track.ID)
 		}
-		conf.Client.AddTracksToPlaylist(newPlaylist.ID, discoverPlaylistTrackIDs...)
+		conf.Client.AddTracksToPlaylist(ctx, newPlaylist.ID, discoverPlaylistTrackIDs...)
 		fmt.Printf("Discover Weekly saved as %s\n", playlistName)
 	},
 }
@@ -86,7 +90,11 @@ func getPlaylistDate() string {
 	return fmt.Sprintf("%d/%d/%d", date.Month(), date.Day(), date.Year())
 }
 func deduplicatePlaylist(playlistName string, user string) bool {
-	searchResults, err := conf.Client.Search(playlistName, spotify.SearchTypePlaylist)
+	if conf.Client == nil {
+		fmt.Println("Client is not initialized")
+		return false
+	}
+	searchResults, err := conf.Client.Search(context.Background(), playlistName, spotify.SearchTypePlaylist)
 	if err != nil {
 		helper.LogErrorAndExit(err)
 	}
@@ -102,4 +110,5 @@ func init() {
 	rootCmd.AddCommand(saveWeeklyCmd)
 	saveWeeklyCmd.Flags().StringP("name", "n", "", "Custom name for the save playlist")
 	saveWeeklyCmd.Flags().BoolP("public", "p", false, "Whether to make the new playlist public")
+	saveWeeklyCmd.Flags().BoolP("collaborative", "c", false, "Set the playlist as collaborative")
 }
