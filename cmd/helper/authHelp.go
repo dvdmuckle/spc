@@ -37,23 +37,27 @@ import (
 const redirectURI = "http://localhost:8888/callback"
 
 var (
-	authenticator = spotifyauth.New(
-		spotifyauth.WithRedirectURL(redirectURI),
-		spotifyauth.WithClientID(clientID),
-		spotifyauth.WithClientSecret(secret),
-		spotifyauth.WithScopes(
-			spotifyauth.ScopeStreaming,
-			spotifyauth.ScopeUserModifyPlaybackState,
-			spotifyauth.ScopeUserReadPlaybackState,
-			spotifyauth.ScopePlaylistModifyPrivate,
-			spotifyauth.ScopePlaylistModifyPublic,
-		),
-	)
+	authenticator *spotifyauth.Authenticator
 	ch       = make(chan *spotify.Client)
 	clientID string
 	secret   string
 	state    = "ringdingthing"
 )
+
+func initAuthenticator(clientID string, secret string) {
+    authenticator = spotifyauth.New(
+        spotifyauth.WithRedirectURL(redirectURI),
+        spotifyauth.WithClientID(clientID),
+        spotifyauth.WithClientSecret(secret),
+        spotifyauth.WithScopes(
+            spotifyauth.ScopeStreaming,
+            spotifyauth.ScopeUserModifyPlaybackState,
+            spotifyauth.ScopeUserReadPlaybackState,
+            spotifyauth.ScopePlaylistModifyPrivate,
+            spotifyauth.ScopePlaylistModifyPublic,
+        ),
+    )
+}
 
 func completeAuth(w http.ResponseWriter, r *http.Request) {
 	tok, err := authenticator.Token(r.Context(), state, r)
@@ -75,6 +79,7 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 	clientID = conf.ClientID
 	secret = conf.Secret
+	initAuthenticator(clientID, secret)
 	curUser, err := user.Current()
 	if err != nil {
 		LogErrorAndExit(err)
@@ -112,7 +117,7 @@ func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 		client := <-ch
 		if client == nil {
 			fmt.Println("Client is not initialized")
-			return
+			os.Exit(1)
 		}
 
 		user, err := client.CurrentUser(context.Background())
@@ -203,10 +208,10 @@ func SetClient(conf *Config) {
 			LogErrorAndExit("Error saving token to keyring", err)
 		}
 	}
-	httpClient := authenticator.Client(context.Background(), &conf.Token)
+	httpClient := spotifyauth.New().Client(context.Background(), &conf.Token)
 	conf.Client = spotify.New(httpClient)
 	if conf.Client == nil {
 		fmt.Println("Client is not initialized")
-		return
+		os.Exit(1)
 	}
 }
