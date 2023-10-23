@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -23,7 +24,7 @@ import (
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 var seekCmd = &cobra.Command{
@@ -56,7 +57,8 @@ the form of minutes:seconds.`,
 			}
 		}
 
-		currentlyPlaying, err := conf.Client.PlayerCurrentlyPlaying()
+		ctx := context.Background()
+		currentlyPlaying, err := conf.Client.PlayerCurrentlyPlaying(ctx)
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
@@ -74,7 +76,7 @@ the form of minutes:seconds.`,
 			os.Exit(1)
 		}
 
-		err = conf.Client.SeekOpt(position*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
+		err = conf.Client.SeekOpt(ctx, position*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}

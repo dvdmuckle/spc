@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"regexp"
@@ -24,7 +25,7 @@ import (
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 // searchCmd represents the search command
@@ -60,15 +61,17 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		searchTerm := strings.Join(args[1:], " ")
 		var searchResults *spotify.SearchResult
 		var err error
+		ctx := context.Background()
+
 		switch searchType {
 		case "track":
-			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeTrack)
+			searchResults, err = conf.Client.Search(ctx, searchTerm, spotify.SearchTypeTrack)
 		case "album":
-			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeAlbum)
+			searchResults, err = conf.Client.Search(ctx, searchTerm, spotify.SearchTypeAlbum)
 		case "playlist":
-			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypePlaylist)
+			searchResults, err = conf.Client.Search(ctx, searchTerm, spotify.SearchTypePlaylist)
 		case "artist":
-			searchResults, err = conf.Client.Search(searchTerm, spotify.SearchTypeArtist)
+			searchResults, err = conf.Client.Search(ctx, searchTerm, spotify.SearchTypeArtist)
 		}
 		if err != nil {
 			helper.LogErrorAndExit(err)
@@ -82,7 +85,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			regexID := regexp.MustCompile(`(spotify:track:)(.*)`)
 			trackID := spotify.ID(regexID.FindStringSubmatch(string(toPlay))[2])
 			seeds := spotify.Seeds{Tracks: []spotify.ID{trackID}}
-			recommends, err := conf.Client.GetRecommendations(seeds, nil, nil)
+			recommends, err := conf.Client.GetRecommendations(ctx, seeds, nil)
 			if err != nil {
 				helper.LogErrorAndExit(err)
 			}
@@ -97,10 +100,10 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		}
 		//If a user tries to play a track with shuffle on,
 		//they'll instead get the related tracks first
-		if err := conf.Client.ShuffleOpt(false, &opts); err != nil {
+		if err := conf.Client.ShuffleOpt(ctx, false, &opts); err != nil {
 			helper.LogErrorAndExit(err)
 		}
-		if err := conf.Client.PlayOpt(&opts); err != nil {
+		if err := conf.Client.PlayOpt(ctx, &opts); err != nil {
 			helper.LogErrorAndExit(err)
 		}
 	},

@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -23,7 +24,7 @@ import (
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 type Status spotify.CurrentlyPlaying
@@ -52,7 +53,7 @@ the command will return an empty string. This may happen if Spotify is paused
 for an extended period of time`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf)
-		status, err := conf.Client.PlayerCurrentlyPlaying()
+		status, err := conf.Client.PlayerCurrentlyPlaying(context.Background())
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
@@ -79,7 +80,7 @@ func init() {
 	statusCmd.Flags().StringP("format", "f", "", "Format string for formatting the status")
 }
 
-//Format implements Formatter for Spotify status
+// Format implements Formatter for Spotify status
 func (stat Status) Format(state fmt.State, verb rune) {
 	switch verb {
 	case 'f':

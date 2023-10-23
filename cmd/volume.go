@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,14 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 // volumeCmd represents the volume command
@@ -49,7 +50,7 @@ one argument, a number between 0 and 100 to set the volume to.`,
 			fmt.Println("Volume cannot be less than 0")
 			os.Exit(1)
 		}
-		conf.Client.VolumeOpt(int(vol), &spotify.PlayOptions{DeviceID: &conf.DeviceID})
+		conf.Client.VolumeOpt(context.Background(), int(vol), &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 	},
 }
 

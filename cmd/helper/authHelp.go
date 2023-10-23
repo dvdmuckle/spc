@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@ limitations under the License.
 package helper
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -28,22 +29,38 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/zalando/go-keyring"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
+	"github.com/zmb3/spotify/v2/auth"
 	"golang.org/x/oauth2"
 )
 
 const redirectURI = "http://localhost:8888/callback"
 
 var (
-	authenticator = spotify.NewAuthenticator(redirectURI, spotify.ScopeStreaming, spotify.ScopeUserModifyPlaybackState, spotify.ScopeUserReadPlaybackState, spotify.ScopePlaylistModifyPrivate, spotify.ScopePlaylistModifyPublic)
-	ch            = make(chan *spotify.Client)
-	clientID      string
-	secret        string
-	state         = "ringdingthing"
+	authenticator *spotifyauth.Authenticator
+	ch       = make(chan *spotify.Client)
+	clientID string
+	secret   string
+	state    = "ringdingthing"
 )
 
+func initAuthenticator(clientID string, secret string) {
+    authenticator = spotifyauth.New(
+        spotifyauth.WithRedirectURL(redirectURI),
+        spotifyauth.WithClientID(clientID),
+        spotifyauth.WithClientSecret(secret),
+        spotifyauth.WithScopes(
+            spotifyauth.ScopeStreaming,
+            spotifyauth.ScopeUserModifyPlaybackState,
+            spotifyauth.ScopeUserReadPlaybackState,
+            spotifyauth.ScopePlaylistModifyPrivate,
+            spotifyauth.ScopePlaylistModifyPublic,
+        ),
+    )
+}
+
 func completeAuth(w http.ResponseWriter, r *http.Request) {
-	tok, err := authenticator.Token(state, r)
+	tok, err := authenticator.Token(r.Context(), state, r)
 	if err != nil {
 		http.Error(w, "Couldn't get token", http.StatusForbidden)
 		LogErrorAndExit(err)
@@ -53,15 +70,16 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 		LogErrorAndExit(fmt.Sprintf("State mismatch: %s != %s\n", st, state))
 	}
 	// use the token to get an authenticated client
-	client := authenticator.NewClient(tok)
+	client := spotify.New(authenticator.Client(r.Context(), tok))
 	fmt.Fprintf(w, "Login Completed!")
-	ch <- &client
+	ch <- client
 }
 
-//Auth authenticates with Spotify and refreshes the token
+// Auth authenticates with Spotify and refreshes the token
 func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 	clientID = conf.ClientID
 	secret = conf.Secret
+	initAuthenticator(clientID, secret)
 	curUser, err := user.Current()
 	if err != nil {
 		LogErrorAndExit(err)
@@ -91,15 +109,18 @@ func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 		}
 	} else {
 		fmt.Println("Getting token...")
-		authenticator.SetAuthInfo(clientID, secret)
 		http.HandleFunc("/callback", completeAuth)
 		go http.ListenAndServe(":8888", nil)
 		url := authenticator.AuthURL(state)
 		fmt.Println("Please log in to Spotify by clicking the following link, or copying it to a web browser:", url)
 		//wait for auth to finish
 		client := <-ch
+		if client == nil {
+			fmt.Println("Client is not initialized")
+			os.Exit(1)
+		}
 
-		user, err := client.CurrentUser()
+		user, err := client.CurrentUser(context.Background())
 		if err != nil {
 			LogErrorAndExit(err)
 		}
@@ -119,13 +140,13 @@ func Auth(cmd *cobra.Command, cfgFile string, conf *Config) {
 	}
 }
 
-//RefreshToken refreshes the auth token from Spotify
+// RefreshToken refreshes the auth token from Spotify
 func RefreshToken(client string, secret string, refreshToken string) *oauth2.Token {
 	var token *oauth2.Token = &oauth2.Token{}
 
 	if refreshToken != "" {
 		const grantType string = "refresh_token"
-		const tokenURL string = spotify.TokenURL
+		const tokenURL string = spotifyauth.TokenURL
 		const contentType string = "application/x-www-form-urlencoded"
 		form := url.Values{}
 		form.Add("grant_type", grantType)
@@ -153,8 +174,8 @@ func RefreshToken(client string, secret string, refreshToken string) *oauth2.Tok
 	return nil
 }
 
-//SetClient sets the Client field of Config struct to a valid Spotify client
-//The Token field in the Config struct must be set
+// SetClient sets the Client field of Config struct to a valid Spotify client
+// The Token field in the Config struct must be set
 func SetClient(conf *Config) {
 	curUser, err := user.Current()
 	if err != nil {
@@ -187,5 +208,10 @@ func SetClient(conf *Config) {
 			LogErrorAndExit("Error saving token to keyring", err)
 		}
 	}
-	conf.Client = spotify.NewAuthenticator(redirectURI).NewClient(&conf.Token)
+	httpClient := spotifyauth.New().Client(context.Background(), &conf.Token)
+	conf.Client = spotify.New(httpClient)
+	if conf.Client == nil {
+		fmt.Println("Client is not initialized")
+		os.Exit(1)
+	}
 }
