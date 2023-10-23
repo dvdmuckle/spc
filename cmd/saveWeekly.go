@@ -18,6 +18,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
@@ -92,7 +93,7 @@ func getPlaylistDate() string {
 func deduplicatePlaylist(playlistName string, user string) bool {
 	if conf.Client == nil {
 		fmt.Println("Client is not initialized")
-		return false
+		os.Exit(1)
 	}
 	searchResults, err := conf.Client.Search(context.Background(), playlistName, spotify.SearchTypePlaylist)
 	if err != nil {

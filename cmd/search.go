@@ -85,7 +85,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 			regexID := regexp.MustCompile(`(spotify:track:)(.*)`)
 			trackID := spotify.ID(regexID.FindStringSubmatch(string(toPlay))[2])
 			seeds := spotify.Seeds{Tracks: []spotify.ID{trackID}}
-			recommends, err := conf.Client.GetRecommendations(ctx, seeds, nil, nil)
+			recommends, err := conf.Client.GetRecommendations(ctx, seeds, nil)
 			if err != nil {
 				helper.LogErrorAndExit(err)
 			}
