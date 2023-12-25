@@ -19,7 +19,9 @@ Package: spc
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
-         dbus-x11
+         dbus-x11,
+         bash-completion,
+         gnome-keyring
 Built-Using: ${misc:Built-Using}
 Description: A lightweight multiplatform CLI for Spotify
  spc Go

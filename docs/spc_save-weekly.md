@@ -15,9 +15,10 @@ spc save-weekly [flags]
 ### Options
 
 ```
-  -h, --help          help for save-weekly
-  -n, --name string   Custom name for the save playlist
-  -p, --public        Whether to make the new playlist public
+  -c, --collaborative   Set the playlist as collaborative
+  -h, --help            help for save-weekly
+  -n, --name string     Custom name for the save playlist
+  -p, --public          Whether to make the new playlist public
 ```
 
 ### Options inherited from parent commands

@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -23,7 +24,7 @@ import (
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 var switchCmd = &cobra.Command{
@@ -85,7 +86,7 @@ func init() {
 }
 
 func transferPlayback(conf *helper.Config, shouldPlay bool) {
-	if err := conf.Client.TransferPlayback(conf.DeviceID, shouldPlay); err != nil {
+	if err := conf.Client.TransferPlayback(context.Background(), conf.DeviceID, shouldPlay); err != nil {
 		helper.LogErrorAndExit(err)
 	}
 }
@@ -96,7 +97,7 @@ func clearDeviceEntry(conf *helper.Config) {
 }
 
 func getDeviceList(conf *helper.Config) []spotify.PlayerDevice {
-	devices, err := conf.Client.PlayerDevices()
+	devices, err := conf.Client.PlayerDevices(context.Background())
 	if err != nil {
 		helper.LogErrorAndExit(err)
 	}

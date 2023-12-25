@@ -1,3 +1,9 @@
+spc (1.1.7-1) jammy; urgency=medium
+
+  * Update dependencies 
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Sun, 24 Dec 2023 20:11:13 -0500
+
 spc (1.1.6-2) jammy; urgency=medium
 
   * Rerun without running dwz
