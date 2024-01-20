@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 David Muckle <dvdmuckle@dvdmuckle.xyz>
+Copyright © 2024 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ and can also switch playback to the already configured device.`,
 			transferPlayback(&conf, shouldPlay)
 		}
 		if err := viper.WriteConfigAs(cfgFile); err != nil {
-			helper.LogErrorAndExit("Error writing config:", err)
+			helper.LogErrorAndExit("Error writing config: ", err)
 		}
 		fmt.Println("Switched to", conf.DeviceID.String())
 
