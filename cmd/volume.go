@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 David Muckle <dvdmuckle@dvdmuckle.xyz>
+Copyright © 2024 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
