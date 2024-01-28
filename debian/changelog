@@ -1,3 +1,11 @@
+spc (1.2.0-1) jammy; urgency=medium
+
+  * Add shuffle command
+  * Update copyright
+  * Update dependencies
+
+ -- David Muckle <dvdmuckle@dvdmuckle.xyz>  Sun, 28 Jan 2024 16:17:28 -0500
+
 spc (1.1.7-1) jammy; urgency=medium
 
   * Update dependencies 
