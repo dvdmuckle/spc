@@ -16,22 +16,34 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
+
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
 )
 
-// pauseCmd represents the pause command
-var pauseCmd = &cobra.Command{
-	Use:   "pause",
-	Short: "Stop Spotify playback",
-	Long:  `Will stop Spotify playback on the device most recently playing music.`,
+// shuffleCmd represents the shuffle command
+var shuffleCmd = &cobra.Command{
+	Use:   "shuffle",
+	Short: "Toggle Spotify shuffle",
+	Long:  `Will toggle shuffle on or off depending on its previous state`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf)
-		helper.Pause(&conf)
+		ctx := context.Background()
+		forceSetShuffle, _ := cmd.Flags().GetBool("set")
+		if forceSetShuffle {
+			conf.Client.Shuffle(ctx, true)
+			return
+		}
+		state, err := conf.Client.PlayerState(ctx)
+		if err != nil {
+			helper.LogErrorAndExit("Error getting player state: ", err)
+		}
+		conf.Client.Shuffle(ctx, !state.ShuffleState)
 	},
-	Aliases: []string{"stop"},
 }
 
 func init() {
-	rootCmd.AddCommand(pauseCmd)
+	rootCmd.AddCommand(shuffleCmd)
+	shuffleCmd.Flags().BoolP("set", "s", false, "Set the shuffle state to on regardless of current state")
 }

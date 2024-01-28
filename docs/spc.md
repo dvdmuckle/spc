@@ -29,6 +29,7 @@ scope, and is best when paired with another more complicated tool.
 * [spc save-weekly](spc_save-weekly.md)	 - Saves the current Spotify Discover Weekly playlist
 * [spc search](spc_search.md)	 - Search for and play a track, album, playlist, or artist
 * [spc seek](spc_seek.md)	 - Seek to a specific position in the currently playing song from Spotify
+* [spc shuffle](spc_shuffle.md)	 - Toggle Spotify shuffle
 * [spc status](spc_status.md)	 - Get the currently playing song from Spotify
 * [spc switch](spc_switch.md)	 - Set device to use for all callbacks
 * [spc version](spc_version.md)	 - Print the version of spc

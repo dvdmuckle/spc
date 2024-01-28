@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 David Muckle <dvdmuckle@dvdmuckle.xyz>
+Copyright © 2024 David Muckle <dvdmuckle@dvdmuckle.xyz>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -67,16 +67,16 @@ only save the current playlist`,
 				break
 			}
 		}
-		discoverPlaylistTracks := func() spotify.PlaylistTrackPage {
-			playlistTracks, err := conf.Client.GetPlaylistTracks(ctx, discoverPlaylist)
+		discoverPlaylistTracks := func() spotify.PlaylistItemPage {
+			playlistTracks, err := conf.Client.GetPlaylistItems(ctx, discoverPlaylist)
 			if err != nil {
 				helper.LogErrorAndExit(err)
 			}
 			return *playlistTracks
 		}
 		var discoverPlaylistTrackIDs []spotify.ID
-		for _, track := range discoverPlaylistTracks().Tracks {
-			discoverPlaylistTrackIDs = append(discoverPlaylistTrackIDs, track.Track.ID)
+		for _, track := range discoverPlaylistTracks().Items {
+			discoverPlaylistTrackIDs = append(discoverPlaylistTrackIDs, track.Track.Track.ID)
 		}
 		conf.Client.AddTracksToPlaylist(ctx, newPlaylist.ID, discoverPlaylistTrackIDs...)
 		fmt.Printf("Discover Weekly saved as %s\n", playlistName)
