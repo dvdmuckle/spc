@@ -40,3 +40,15 @@ jobs:
         goos: ${{ matrix.goos }}
         extra_files: "LICENSE"
         ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
+  homebrew:
+    name: Bumpe Homebrew formula
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mislav/bump-homebrew-formula-action@v3
+        with:
+          formula-name: spc
+          create-pullrequest: true
+          homebrew-tap: dvdmuckle/homebrew-tap
+          tag-name: ${{ github.event.release.tag_name }}"
+        env:
+          COMITTER_TOKEN: ${{ secrets.HOMEBREW_BUMP }}
