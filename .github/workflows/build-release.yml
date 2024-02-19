@@ -1,3 +1,4 @@
+name: Build Release
 on:
   release:
     types:
@@ -10,26 +11,34 @@ permissions:
 jobs:
   build:
     name: release ${{ matrix.goos }}/${{ matrix.goarch }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.machine }}
     strategy:
       matrix:
         include:
           - goos: linux
             goarch: 386
+            machine: ubuntu-latest
           - goos: linux
             goarch: amd64
+            machine: ubuntu-latest
           - goos: linux
             goarch: arm
+            machine: ubuntu-latest
           - goos: linux
             goarch: arm64
+            machine: ubuntu-latest
           - goos: darwin
             goarch: amd64
+            machine: macos-latest
           - goos: darwin
             goarch: arm64
+            machine: macos-14
           - goos: windows
             goarch: 386
+            machine: ubuntu-latest
           - goos: windows
             goarch: amd64
+            machine: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: compile and release
@@ -41,7 +50,7 @@ jobs:
         extra_files: "LICENSE"
         ldflags: "-X github.com/dvdmuckle/spc/cmd.version=${{ github.event.release.tag_name }}"
   homebrew:
-    name: Bumpe Homebrew formula
+    name: Bump Homebrew formula
     runs-on: ubuntu-latest
     steps:
       - uses: mislav/bump-homebrew-formula-action@v3
@@ -49,6 +58,6 @@ jobs:
           formula-name: spc
           create-pullrequest: true
           homebrew-tap: dvdmuckle/homebrew-tap
-          tag-name: ${{ github.event.release.tag_name }}"
+          tag-name: ${{ github.event.release.tag_name }}
         env:
           COMITTER_TOKEN: ${{ secrets.HOMEBREW_BUMP }}
