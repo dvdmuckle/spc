@@ -8,7 +8,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
-	github.com/zalando/go-keyring v0.2.3
+	github.com/zalando/go-keyring v0.2.4
 	github.com/zmb3/spotify/v2 v2.4.1
 	golang.org/x/oauth2 v0.18.0
 )
