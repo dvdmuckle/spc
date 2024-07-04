@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             1.2.0
+%global tag             1.2.1
 Version:                %{tag}
 %gometa
 
@@ -87,6 +87,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Thu Jul 04 2024 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.2.1-1
+- Update dependencies
+
 * Sun Jan 28 2024 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.2.0-1
 - Add shuffle command
 - Update copyrights
