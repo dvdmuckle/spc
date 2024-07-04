@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,7 @@ exactly one argument, either a number between 0 and the length of the song in se
 the form of minutes:seconds.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf)
-		var position int
+		var position spotify.Numeric
 		if strings.Contains(args[0], ":") {
 			var (
 				minutes int
@@ -47,14 +47,15 @@ the form of minutes:seconds.`,
 				fmt.Println("Timestamp must be numbers in the form of minutes:seconds")
 				os.Exit(1)
 			}
-			position = minutes*60 + seconds
+			position = spotify.Numeric(minutes*60 + seconds)
 		} else {
 			var err error
-			position, err = strconv.Atoi(args[0])
+			tmp, err := strconv.Atoi(args[0])
 			if err != nil {
 				fmt.Println("Passed value for seconds must be an integer.")
 				os.Exit(1)
 			}
+			position = spotify.Numeric(tmp)
 		}
 
 		ctx := context.Background()
@@ -76,7 +77,7 @@ the form of minutes:seconds.`,
 			os.Exit(1)
 		}
 
-		err = conf.Client.SeekOpt(ctx, position*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
+		err = conf.Client.SeekOpt(ctx, int(position)*1000, &spotify.PlayOptions{DeviceID: &conf.DeviceID})
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}

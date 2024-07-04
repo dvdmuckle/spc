@@ -29,4 +29,4 @@ jobs:
           dnf -y install copr-cli
 
       - name: Submit the build by uploading the spec
-        run: copr build dvdmuckle/spc spc.spec
+        run: copr build --nowait dvdmuckle/spc spc.spec
