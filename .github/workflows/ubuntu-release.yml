@@ -12,7 +12,7 @@ jobs:
       - name: Check out proper version of sources
         uses: actions/checkout@v1
 
-      - uses: crazy-max/ghaction-import-gpg@v1
+      - uses: crazy-max/ghaction-import-gpg@v6
         env:
            GPG_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_KEY }}
            PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
