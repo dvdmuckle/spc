@@ -3,14 +3,14 @@ module github.com/dvdmuckle/spc
 go 1.20
 
 require (
-	github.com/golang/glog v1.2.1
+	github.com/golang/glog v1.2.2
 	github.com/ktr0731/go-fuzzyfinder v0.8.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/zalando/go-keyring v0.2.5
 	github.com/zmb3/spotify/v2 v2.4.2
-	golang.org/x/oauth2 v0.21.0
+	golang.org/x/oauth2 v0.22.0
 )
 
 require (

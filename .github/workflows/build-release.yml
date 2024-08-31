@@ -1,4 +1,3 @@
-name: Build Release
 on:
   release:
     types:
@@ -11,38 +10,30 @@ permissions:
 jobs:
   build:
     name: release ${{ matrix.goos }}/${{ matrix.goarch }}
-    runs-on: ${{ matrix.machine }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - goos: linux
             goarch: 386
-            machine: ubuntu-latest
           - goos: linux
             goarch: amd64
-            machine: ubuntu-latest
           - goos: linux
             goarch: arm
-            machine: ubuntu-latest
           - goos: linux
             goarch: arm64
-            machine: ubuntu-latest
           - goos: darwin
             goarch: amd64
-            machine: macos-latest
           - goos: darwin
             goarch: arm64
-            machine: macos-14
           - goos: windows
             goarch: 386
-            machine: ubuntu-latest
           - goos: windows
             goarch: amd64
-            machine: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.40
+      uses: wangyoucao577/go-release-action@v1.51
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: ${{ matrix.goarch }}
@@ -58,6 +49,6 @@ jobs:
           formula-name: spc
           create-pullrequest: true
           homebrew-tap: dvdmuckle/homebrew-tap
-          tag-name: ${{ github.event.release.tag_name }}
+          tag-name: "${{ github.event.release.tag_name }}"
         env:
           COMITTER_TOKEN: ${{ secrets.HOMEBREW_BUMP }}
