@@ -51,4 +51,4 @@ jobs:
           homebrew-tap: dvdmuckle/homebrew-tap
           tag-name: "${{ github.event.release.tag_name }}"
         env:
-          COMITTER_TOKEN: ${{ secrets.HOMEBREW_BUMP }}
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_BUMP }}
