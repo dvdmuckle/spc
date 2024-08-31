@@ -50,7 +50,7 @@ prepare-deb-build: go-build
 	mkdir -p debbuild
 	mv ../spc_* debbuild/
 deb-bump-version:
-	dch -i -M -D "jammy"
+	dch -i -M -D "noble"
 bump-and-prepare-deb-build: deb-bump-version prepare-deb-build
 rpm-bump-spec:
 	rpmdev-bumpspec -u "David Muckle <dvdmuckle@dvdmuckle.xyz>" spc.spec
