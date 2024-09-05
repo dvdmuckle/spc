@@ -10,7 +10,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/zalando/go-keyring v0.2.5
 	github.com/zmb3/spotify/v2 v2.4.2
-	golang.org/x/oauth2 v0.22.0
+	golang.org/x/oauth2 v0.23.0
 )
 
 require (
