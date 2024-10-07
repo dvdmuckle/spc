@@ -33,7 +33,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.51
+      uses: wangyoucao577/go-release-action@v1.52
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: ${{ matrix.goarch }}
