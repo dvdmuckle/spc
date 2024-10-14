@@ -6,6 +6,7 @@ import (
 	"github.com/dvdmuckle/spc/cmd/helper"
 	"github.com/spf13/cobra"
 	"github.com/zmb3/spotify/v2"
+	"time"
 )
 
 // saveDaylistCmd represents the save-daylist command
@@ -39,9 +40,9 @@ Note this saves the Daylist at the current time of day and cannot retrieve past 
 			}
 		}
 
-		playlistDescription := "Spotify Daylist: " + daylistPlaylist.Name
+		playlistDescription := "Spotify Daylist: " + daylistPlaylist.Name + " " + getDaylistDateTime()
 		if playlistName == "" {
-			playlistName = daylistPlaylist.Name
+			playlistName = daylistPlaylist.Name + "-" + getDaylistDateTime()
 		}
 
 		if deduplicatePlaylist(playlistName, currentUser.User.ID) {
@@ -74,6 +75,11 @@ Note this saves the Daylist at the current time of day and cannot retrieve past 
 
 		fmt.Printf("Daylist saved as %s\n", playlistName)
 	},
+}
+
+func getDaylistDateTime() string {
+	date := time.Now()
+	return fmt.Sprintf("%d/%d/%d", date.Month(), date.Day(), date.Year())
 }
 
 func init() {
