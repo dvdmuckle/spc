@@ -26,6 +26,7 @@ scope, and is best when paired with another more complicated tool.
 * [spc pause](spc_pause.md)	 - Stop Spotify playback
 * [spc play](spc_play.md)	 - Start Spotify playback
 * [spc previous](spc_previous.md)	 - Goes back to the previously playing track
+* [spc save-daylist](spc_save-daylist.md)	 - Saves the current Spotify Daylist playlist
 * [spc save-weekly](spc_save-weekly.md)	 - Saves the current Spotify Discover Weekly playlist
 * [spc search](spc_search.md)	 - Search for and play a track, album, playlist, or artist
 * [spc seek](spc_seek.md)	 - Seek to a specific position in the currently playing song from Spotify
