@@ -117,9 +117,13 @@ var eliteCmd = &cobra.Command{
 		}()
 
 		// Add a path.
-		err = watcher.Add("/home/dvdmuckle/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous")
+		home, err := os.UserHomeDir()
 		if err != nil {
-			log.Fatal(err)
+			helper.LogErrorAndExit(err)
+		}
+		err = watcher.Add(home + "/Saved Games/Frontier Developments/Elite Dangerous")
+		if err != nil {
+			helper.LogErrorAndExit(err)
 		}
 
 		// Block main goroutine forever.
