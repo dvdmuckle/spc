@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,14 +19,13 @@ import (
 	"fmt"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
-//CreateConfig initializes a skeleton config
+// CreateConfig initializes a skeleton config
 func CreateConfig(cfgFile string) {
 	// Find home directory.
-	home, err := homedir.Dir()
+	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -51,10 +50,10 @@ func CreateConfig(cfgFile string) {
 	}
 }
 
-//SetupConfig sets up the path and type of the config for Viper
-//and also returns the full path to the config
+// SetupConfig sets up the path and type of the config for Viper
+// and also returns the full path to the config
 func SetupConfig() string {
-	home, err := homedir.Dir()
+	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
