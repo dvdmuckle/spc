@@ -83,7 +83,7 @@ var eliteCmd = &cobra.Command{
 									journalEvent = tempEvent
 								}
 							}
-							if !(lastSeenTrack == journalEvent.MusicTrack) {
+							if lastSeenTrack != journalEvent.MusicTrack {
 								fmt.Println("New track detected: " + journalEvent.MusicTrack)
 								lastSeenTrack = journalEvent.MusicTrack
 								playlistToSearch := viper.GetString("elite." + journalEvent.MusicTrack)
@@ -121,9 +121,16 @@ var eliteCmd = &cobra.Command{
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
-		err = watcher.Add(home + "/Saved Games/Frontier Developments/Elite Dangerous")
-		if err != nil {
-			helper.LogErrorAndExit(err)
+		if viper.GetString("journalPath") != "" {
+			err = watcher.Add(home + "/Saved Games/Frontier Developments/Elite Dangerous")
+			if err != nil {
+				helper.LogErrorAndExit(err)
+			}
+		} else {
+			err = watcher.Add(viper.GetString("journalPath"))
+			if err != nil {
+				helper.LogErrorAndExit(err)
+			}
 		}
 
 		// Block main goroutine forever.
