@@ -90,11 +90,6 @@ var eliteCmd = &cobra.Command{
 								if playlistToSearch != "" && lastSeenTrack != currentlyPlayingTrack {
 									currentlyPlayingTrack = lastSeenTrack
 									ctx := context.Background()
-									//searchResult, err := conf.Client.Search(ctx, playlistToSearch, spotify.SearchTypePlaylist)
-									//if err != nil {
-									//	helper.LogErrorAndExit(err)
-									//}
-									//opts.PlaybackContext = &searchResult.Playlists.Playlists[0].URI
 									var opts spotify.PlayOptions
 									opts.DeviceID = &conf.DeviceID
 									playlistString := spotify.URI(playlistToSearch)
@@ -122,12 +117,12 @@ var eliteCmd = &cobra.Command{
 			helper.LogErrorAndExit(err)
 		}
 		if viper.GetString("journalPath") != "" {
-			err = watcher.Add(home + "/Saved Games/Frontier Developments/Elite Dangerous")
+			err = watcher.Add(viper.GetString("journalPath"))
 			if err != nil {
 				helper.LogErrorAndExit(err)
 			}
 		} else {
-			err = watcher.Add(viper.GetString("journalPath"))
+			err = watcher.Add(home + "/Saved Games/Frontier Developments/Elite Dangerous")
 			if err != nil {
 				helper.LogErrorAndExit(err)
 			}
