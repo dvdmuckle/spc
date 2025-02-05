@@ -5,12 +5,11 @@ go 1.20
 require (
 	github.com/golang/glog v1.2.3
 	github.com/ktr0731/go-fuzzyfinder v0.8.0
-	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/zalando/go-keyring v0.2.6
 	github.com/zmb3/spotify/v2 v2.4.3
-	golang.org/x/oauth2 v0.24.0
+	golang.org/x/oauth2 v0.26.0
 )
 
 require (
