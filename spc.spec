@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             1.2.2
+%global tag             1.3.0
 Version:                %{tag}
 %gometa
 
@@ -87,6 +87,10 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Fri Feb 14 2025 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.3.0-1
+- Update dependencies
+- New save-daylist command
+
 * Sat Aug 31 2024 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.2.2-1
 - Update dependencies
 
