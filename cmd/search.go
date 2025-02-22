@@ -43,7 +43,7 @@ making up the search query. For example:
 
 If a track is queried for, additional similar songs will be queued up.
 
-More advanced options are availble for the search query. For this,
+More advanced options are available for the search query. For this,
 please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.SetClient(&conf)
