@@ -23,7 +23,7 @@ If the version is not bumped for Linux package changes, the builds for these pac
 
 ## Merging
 
-The only method for commiting to the `main` branch is via PR from the `dev` branch. The changes in the dev branch should include all the actual changes in the proceeding version, as well as the version bumps for package specs as described above. Once a PR has been merged into the `main` branch, the changes should be pulled in locally, and tagged. This tag takes the form of `X.X.X` where each is an integer. Note the lack of a preceeding `v` in the tag. This is due to Linux packaging constraints, specifically with Fedora packages. A tag with the `v` as a prefix will be created by automation for Golang module purposes. Once the tag has been created with `git tag`, it can be pushed with `git push --tags`.
+The only method for committing to the `main` branch is via PR from the `dev` branch. The changes in the dev branch should include all the actual changes in the proceeding version, as well as the version bumps for package specs as described above. Once a PR has been merged into the `main` branch, the changes should be pulled in locally, and tagged. This tag takes the form of `X.X.X` where each is an integer. Note the lack of a preceding `v` in the tag. This is due to Linux packaging constraints, specifically with Fedora packages. A tag with the `v` as a prefix will be created by automation for Golang module purposes. Once the tag has been created with `git tag`, it can be pushed with `git push --tags`.
 
 ## Publishing A Release
 
