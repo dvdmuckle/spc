@@ -1,7 +1,8 @@
 module github.com/dvdmuckle/spc
 
-go 1.20
-toolchain go1.24.1
+go 1.23.0
+
+toolchain go1.24.2
 
 require (
 	github.com/golang/glog v1.2.4
