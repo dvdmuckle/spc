@@ -38,7 +38,7 @@ func CreateConfig(cfgFile string) {
 		if err := os.MkdirAll(configPath, 0755); err != nil {
 			LogErrorAndExit("Error creating config path: ", err)
 		}
-		cfgFile = fmt.Sprintf(configPath + "/config.yaml")
+		cfgFile = fmt.Sprint(configPath + "/config.yaml")
 	}
 	viper.SetDefault("spotifyclientid", "Your Spotify ClientID")
 	viper.SetDefault("spotifysecret", "Your Spotify Client Secret base64 encoded")
