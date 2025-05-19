@@ -19,7 +19,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/dvdmuckle/spc/cmd/helper"
@@ -81,20 +80,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		opts.DeviceID = &conf.DeviceID
 		switch searchType {
 		case "track":
-			//This lines up some songs to play after the search result plays
-			regexID := regexp.MustCompile(`(spotify:track:)(.*)`)
-			trackID := spotify.ID(regexID.FindStringSubmatch(string(toPlay))[2])
-			seeds := spotify.Seeds{Tracks: []spotify.ID{trackID}}
-			recommends, err := conf.Client.GetRecommendations(ctx, seeds, nil)
-			if err != nil {
-				helper.LogErrorAndExit(err)
-			}
-			var recommendURIs []spotify.URI
-			for _, track := range recommends.Tracks {
-				recommendURIs = append(recommendURIs, track.URI)
-			}
 			opts.URIs = append(opts.URIs, toPlay)
-			opts.URIs = append(opts.URIs, recommendURIs...)
 		case "album", "playlist", "artist":
 			opts.PlaybackContext = &toPlay
 		}
