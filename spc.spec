@@ -87,6 +87,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Mon May 19 2025 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.3.2-1
+- Hotfix disable track recommendations
+
 * Fri Apr 25 2025 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.3.1-1
 - Update dependencies
 - Minor bug fixes, update golang toolchain version
