@@ -33,7 +33,7 @@ jobs:
     - name: Generate Docs
       run: ./spc docs markdown docs
 
-    - uses: stefanzweifel/git-auto-commit-action@v5
+    - uses: stefanzweifel/git-auto-commit-action@v6
       with:
         commit_message: Update docs
         file_pattern: docs/*.md
