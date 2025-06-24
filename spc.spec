@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             1.3.1
+%global tag             1.3.3
 Version:                %{tag}
 %gometa
 
@@ -87,6 +87,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Tue Jun 24 2025 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.3.3-1
+- Dependencies
+
 * Mon May 19 2025 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.3.2-1
 - Hotfix disable track recommendations
 
