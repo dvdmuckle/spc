@@ -1,6 +1,6 @@
 module github.com/dvdmuckle/spc
 
-go 1.24
+go 1.24.0
 
 toolchain go1.24.2
 
@@ -11,7 +11,7 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/zalando/go-keyring v0.2.6
 	github.com/zmb3/spotify/v2 v2.4.3
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.31.0
 )
 
 require (
