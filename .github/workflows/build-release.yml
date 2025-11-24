@@ -31,7 +31,7 @@ jobs:
           - goos: windows
             goarch: amd64
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: compile and release
       uses: wangyoucao577/go-release-action@v1.53
       with:
