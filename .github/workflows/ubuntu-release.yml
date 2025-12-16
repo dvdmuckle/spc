@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Check out proper version of sources
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - uses: crazy-max/ghaction-import-gpg@v6
         with:
