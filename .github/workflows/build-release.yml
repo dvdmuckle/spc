@@ -31,9 +31,9 @@ jobs:
           - goos: windows
             goarch: amd64
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: compile and release
-      uses: wangyoucao577/go-release-action@v1.53
+      uses: wangyoucao577/go-release-action@v1.55
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goarch: ${{ matrix.goarch }}
