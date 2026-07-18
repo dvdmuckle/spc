@@ -30,33 +30,33 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/zalando/go-keyring"
 	"github.com/zmb3/spotify/v2"
-	"github.com/zmb3/spotify/v2/auth"
+	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"golang.org/x/oauth2"
 )
 
-const redirectURI = "http://localhost:8888/callback"
+const redirectURI = "http://127.0.0.1:8888/callback"
 
 var (
 	authenticator *spotifyauth.Authenticator
-	ch       = make(chan *spotify.Client)
-	clientID string
-	secret   string
-	state    = "ringdingthing"
+	ch            = make(chan *spotify.Client)
+	clientID      string
+	secret        string
+	state         = "ringdingthing"
 )
 
 func initAuthenticator(clientID string, secret string) {
-    authenticator = spotifyauth.New(
-        spotifyauth.WithRedirectURL(redirectURI),
-        spotifyauth.WithClientID(clientID),
-        spotifyauth.WithClientSecret(secret),
-        spotifyauth.WithScopes(
-            spotifyauth.ScopeStreaming,
-            spotifyauth.ScopeUserModifyPlaybackState,
-            spotifyauth.ScopeUserReadPlaybackState,
-            spotifyauth.ScopePlaylistModifyPrivate,
-            spotifyauth.ScopePlaylistModifyPublic,
-        ),
-    )
+	authenticator = spotifyauth.New(
+		spotifyauth.WithRedirectURL(redirectURI),
+		spotifyauth.WithClientID(clientID),
+		spotifyauth.WithClientSecret(secret),
+		spotifyauth.WithScopes(
+			spotifyauth.ScopeStreaming,
+			spotifyauth.ScopeUserModifyPlaybackState,
+			spotifyauth.ScopeUserReadPlaybackState,
+			spotifyauth.ScopePlaylistModifyPrivate,
+			spotifyauth.ScopePlaylistModifyPublic,
+		),
+	)
 }
 
 func completeAuth(w http.ResponseWriter, r *http.Request) {
