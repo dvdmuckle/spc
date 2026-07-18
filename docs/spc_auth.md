@@ -4,10 +4,8 @@ Authenticates with Spotify
 
 ### Synopsis
 
-Authenticates with Spotify by printing a login link, which will then save your access token to the config file.
-Use this command after the initial login to refresh your access token.
-
-Before running this command, make sure your Spotify app's callback URL is set to `http://127.0.0.1:8888/callback` in the Spotify developer dashboard.
+Authenticates with Spotify by printout out a login link, which will then save your access token to the config file.
+Use this command after the initial login to refresh your access token
 
 ```
 spc auth [flags]
