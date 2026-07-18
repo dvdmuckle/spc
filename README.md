@@ -43,7 +43,7 @@ Make sure `$GOPATH/bin` is in your `PATH` for this to work.
 
 To set up the app, run `spc config` to generate a skeleton config file at `~/.config/spc/config.yaml` or `.config/spc/config.yaml` in your user directory on Windows.
 
-Next, head to <http://developer.spotify.com/dashboard> to create a new Spotify app. Make sure to set a callback URL for `http://localhost:8888/callback`. Paste the ClientID and ClientSecret in the newly created config file as noted in the file. **Make sure the ClientSecret is base64 encoded.**
+Next, head to <http://developer.spotify.com/dashboard> to create a new Spotify app. Make sure to set the callback URL to `http://127.0.0.1:8888/callback` in the Spotify app settings. Paste the ClientID and ClientSecret in the newly created config file as noted in the file. **Make sure the ClientSecret is base64 encoded.**
 
 You can now run `spc auth` to start the OAuth2 flow, which will have you grant the Spotify app you created, and thus `spc`, the correct API permissions.
 

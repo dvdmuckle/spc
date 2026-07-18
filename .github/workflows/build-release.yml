@@ -1,3 +1,4 @@
+name: Build Release
 on:
   release:
     types:
@@ -31,7 +32,7 @@ jobs:
           - goos: windows
             goarch: amd64
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: compile and release
       uses: wangyoucao577/go-release-action@v1.55
       with:
@@ -44,7 +45,7 @@ jobs:
     name: Bump Homebrew formula
     runs-on: ubuntu-latest
     steps:
-      - uses: mislav/bump-homebrew-formula-action@v3
+      - uses: mislav/bump-homebrew-formula-action@v4
         with:
           formula-name: spc
           create-pullrequest: true
