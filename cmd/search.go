@@ -40,7 +40,8 @@ making up the search query. For example:
 	spc search playlist prog monsters
 	spc search artist rush
 
-If a track is queried for, additional similar songs will be queued up.
+If a track is queried for, the rest of the album the track belongs to will be queued up, in order
+from where the track appears on the album.
 
 More advanced options are available for the search query. For this,
 please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
@@ -75,12 +76,13 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 		if err != nil {
 			helper.LogErrorAndExit(err)
 		}
-		toPlay := fuzzySearchResults(*searchResults, searchType)
+		toPlay, albumIfTrack := fuzzySearchResults(*searchResults, searchType)
 		var opts spotify.PlayOptions
 		opts.DeviceID = &conf.DeviceID
 		switch searchType {
 		case "track":
-			opts.URIs = append(opts.URIs, toPlay)
+			opts.PlaybackContext = &albumIfTrack
+			opts.PlaybackOffset = &spotify.PlaybackOffset{URI: toPlay}
 		case "album", "playlist", "artist":
 			opts.PlaybackContext = &toPlay
 		}
@@ -96,7 +98,7 @@ please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search`,
 	ValidArgs: []string{"track", "album", "playlist", "artist"},
 }
 
-func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify.URI {
+func fuzzySearchResults(results spotify.SearchResult, searchType string) (spotify.URI, spotify.URI) {
 	var idx int
 	var err error
 	switch searchType {
@@ -139,19 +141,19 @@ func fuzzySearchResults(results spotify.SearchResult, searchType string) spotify
 	}
 	switch searchType {
 	case "track":
-		return results.Tracks.Tracks[idx].URI
+		return results.Tracks.Tracks[idx].URI, results.Tracks.Tracks[idx].Album.URI
 	case "album":
-		return results.Albums.Albums[idx].URI
+		return results.Albums.Albums[idx].URI, spotify.URI("")
 	case "playlist":
-		return results.Playlists.Playlists[idx].URI
+		return results.Playlists.Playlists[idx].URI, spotify.URI("")
 	case "artist":
-		return results.Artists.Artists[idx].URI
+		return results.Artists.Artists[idx].URI, spotify.URI("")
 
 	}
 	//The code should never get here because of our check of
 	//search types earlier, this is just to make the compiler
 	//happy
-	return ""
+	return "", ""
 }
 
 func init() {
