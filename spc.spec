@@ -4,7 +4,7 @@
 # https://github.com/dvdmuckle/spc
 
 %global goipath         github.com/dvdmuckle/spc
-%global tag             1.3.6
+%global tag             1.4.0
 Version:                %{tag}
 %gometa
 
@@ -87,6 +87,9 @@ install -m 0644 -vpt %{buildroot}%{_mandir}/man1/ %{gobuilddir}/spcdocs/spc*
 %gopkgfiles
 
 %changelog
+* Tue Nov 03 2026 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.4.0-1
+- Fix track searching
+
 * Sat Oct 03 2026 David Muckle <dvdmuckle@dvdmuckle.xyz> - 1.3.6-1
 - Dependencies
 
