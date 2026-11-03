@@ -13,7 +13,8 @@ making up the search query. For example:
 	spc search playlist prog monsters
 	spc search artist rush
 
-If a track is queried for, additional similar songs will be queued up.
+If a track is queried for, the rest of the album the track belongs to will be queued up, in order
+from where the track appears on the album.
 
 More advanced options are available for the search query. For this,
 please see https://pkg.go.dev/github.com/zmb3/spotify?tab=doc#Client.Search
