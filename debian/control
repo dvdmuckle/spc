@@ -21,7 +21,7 @@ Depends: ${misc:Depends},
          ${shlibs:Depends},
          dbus-x11,
          bash-completion,
-         gnome-keyring
+         gnome-keyring | kwalletmanager
 Built-Using: ${misc:Built-Using}
 Description: A lightweight multiplatform CLI for Spotify
  spc Go

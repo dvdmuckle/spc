@@ -15,7 +15,7 @@ A lightweight multiplatform CLI for Spotify.}
 %global godocs          README.md
 
 Name:           spc
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A lightweight multiplatform CLI for Spotify
 
 # Upstream license specification: Apache-2.0
@@ -38,7 +38,7 @@ BuildRequires:  git
 
 Requires: bash-completion
 Requires: dbus-x11
-Requires: gnome-keyring
+Requires: (oo7-daemon or gnome-keyring or kf6-kwallet)
 
 %description
 %{common_description}
