@@ -38,7 +38,12 @@ BuildRequires:  git
 
 Requires: bash-completion
 Requires: dbus-x11
+%if 0%{?fedora} >= 45
 Requires: (oo7-daemon or gnome-keyring or kf6-kwallet)
+%else
+Requires: (gnome-keyring or kf6-kwallet)
+%endif
+
 
 %description
 %{common_description}
